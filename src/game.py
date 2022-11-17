@@ -40,7 +40,7 @@ def generate_deck():
     return deck
 
 # Retrieves the value of all the cards in a hand.
-def get_hand_value(hand):
+def get_hand_total(hand):
     value = 0
     for i in hand:
         value += i.value
@@ -102,7 +102,7 @@ def process_choices(state):
                 print_cards(state["dealer"], "Dealer's")
                 # Determine whether the player should win or lose points.
                 result = ""
-                if state["player_value"] > state["dealer_value"]:
+                if state["player_total"] > state["dealer_total"]:
                     result = "win 10"
                     state["score"] += 10
                 else:
@@ -145,17 +145,17 @@ def run():
         # Print the player's cards.
         print_cards(state["player"], "Your")
         # Get the value of the player and dealer hands.
-        state["player_value"] = get_hand_value(state["player"])
-        state["dealer_value"] = get_hand_value(state["dealer"])
+        state["player_total"] = get_hand_total(state["player"])
+        state["dealer_total"] = get_hand_total(state["dealer"])
 
         # Bust. Getting a total greater than 21 in the player's hand
         # results in a game over.
-        if state["player_value"] > TOTAL_BLACKJACK:
+        if state["player_total"] > TOTAL_BLACKJACK:
             print("You exceeded 21. Game over!")
             break
 
         # We've hit blackjack if the player hand's total is 21.
-        if state["player_value"] == TOTAL_BLACKJACK:
+        if state["player_total"] == TOTAL_BLACKJACK:
             print("You hit blackjack! (21 points)")
             state["score"] += TOTAL_BLACKJACK
             # Mark next round.
