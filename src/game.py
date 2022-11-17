@@ -177,5 +177,4 @@ def run():
     # Print the player's score (Reached only during game over).
     print(f"Your score: {state['score']}")
 
-# Run the game by calling the main game function.
-run()
+    return score
