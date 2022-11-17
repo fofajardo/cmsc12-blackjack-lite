@@ -58,6 +58,9 @@ def print_cards(hand, target):
 # Performs checks on whether a new deck should be generated and if
 # a blackjack is hit through an ace and 10-value card combination.
 def start_new_round(state):
+    if not state["new_round"]:
+        return
+
     # There are fewer than 10 cards left in the deck.
     # Generate a new deck.
     if len(state["deck"]) < 10:
@@ -90,6 +93,10 @@ def start_new_round(state):
         state["dealer"].append(card)
         state["deck"].remove(card)
 
+    # We're done and prevent these checks from occurring in the
+    # next iteration unless we're in a new round again.
+    state["new_round"] = False
+
 def process_choices(state):
     while True:
         print("[1] Stand")
@@ -112,7 +119,7 @@ def process_choices(state):
                     state["score"] -= POINTS_STAND
                 print(f"You {result} {POINTS_STAND} points!")
                 # Mark next round.
-                new_round = True
+                state["new_round"] = True
                 break
             # Hit: draw a random card from the deck.
             elif choice == 2:
@@ -132,20 +139,17 @@ def run():
         "dealer": [],
         # The player's score.
         "score": 0,
+        # Determines if we're in a new round.
+        "new_round": True,
     }
-    # Determines if we're in a new round.
-    new_round = True
 
     while True:
-        # We're in a new round.
-        if new_round:
-            start_new_round(state)
-            # We're done and prevent these checks from occurring in the
-            # next iteration unless we're in a new round again.
-            new_round = False
+        # Start a new round (if applicable).
+        start_new_round(state)
 
         # Print the player's cards.
         print_cards(state["player"], "Your")
+
         # Get the value of the player and dealer hands.
         state["player_total"] = get_hand_total(state["player"])
         state["dealer_total"] = get_hand_total(state["dealer"])
@@ -160,8 +164,7 @@ def run():
         if state["player_total"] == TOTAL_BLACKJACK:
             print(f"You hit blackjack! ({POINTS_BLACKJACK} points)")
             state["score"] += POINTS_BLACKJACK
-            # Mark next round.
-            new_round = True
+            state["new_round"] = True
             continue
 
         # Process player choices.
