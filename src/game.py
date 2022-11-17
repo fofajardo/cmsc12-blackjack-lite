@@ -55,12 +55,14 @@ def print_cards(hand, target):
 
 # The main game function.
 def run():
-    deck = generate_deck()
-    # Hands: cards held by the player and dealer.
-    player = []
-    dealer = []
-    # Player score
-    score = 0
+    state = {
+        "deck": [],
+        # Hands: cards held by the player and dealer.
+        "player": [],
+        "dealer": [],
+        # The player's score.
+        "score": 0,
+    }
     # Determines if we're in a new round, which triggers checks on whether
     # a new deck should be generated and if a blackjack is hit through
     # an ace and 10-value card combination.
@@ -71,45 +73,45 @@ def run():
         if new_round:
             # There are fewer than 10 cards left in the deck.
             # Generate a new deck.
-            if len(deck) < 10:
-                deck = generate_deck()
+            if len(state["deck"]) < 10:
+                state["deck"] = generate_deck()
 
             # Reset player hand and draw two additional cards.
-            player.clear()
+            state["player"].clear()
             card_ace = None
             card_ten = None
 
             for i in range(2):
-                card = random.choice(deck)
-                player.append(card)
-                deck.remove(card)
+                card = random.choice(state["deck"])
+                state["player"].append(card)
+                state["deck"].remove(card)
                 # Check if our first two cards match a combination for
                 # hitting a blackjack early.
                 if card.type == CARD_ACE:
                     card_ace = card
                 if card.value == 10:
-                    card_ten = ten
+                    card_ten = card
 
             # Set the ace card's value to 11 if we've matched the combination.
             if card_ace and card_ten:
                 card_ace.value = 11
 
             # Reset dealer hand and draw two additional cards.
-            dealer.clear()
+            state["dealer"].clear()
             for i in range(2):
-                card = random.choice(deck)
-                dealer.append(card)
-                deck.remove(card)
+                card = random.choice(state["deck"])
+                state["dealer"].append(card)
+                state["deck"].remove(card)
 
             # We're done and prevent these checks from occurring in the
             # next iteration unless we're in a new round again.
             new_round = False
 
         # Print the player's cards.
-        print_cards(player, "Your")
+        print_cards(state["player"], "Your")
         # Get the value of the player and dealer hands.
-        player_value = get_hand_value(player)
-        dealer_value = get_hand_value(dealer)
+        player_value = get_hand_value(state["player"])
+        dealer_value = get_hand_value(state["dealer"])
 
         # Bust. Getting a total greater than 21 in the player's hand
         # results in a game over.
@@ -120,7 +122,7 @@ def run():
         # We've hit blackjack if the player hand's total is 21.
         if player_value == TOTAL_BLACKJACK:
             print("You hit blackjack! (21 points)")
-            score += TOTAL_BLACKJACK
+            state["score"] += TOTAL_BLACKJACK
             # Mark next round.
             new_round = True
             continue
@@ -136,24 +138,24 @@ def run():
                 # player total with the dealer total.
                 if choice == 1:
                     # Print the dealer's cards.
-                    print_cards(dealer, "Dealer's")
+                    print_cards(state["dealer"], "Dealer's")
                     # Determine whether the player should win or lose points.
                     result = ""
                     if player_value > dealer_value:
                         result = "win 10"
-                        score += 10
+                        state["score"] += 10
                     else:
                         result = "lose 10"
-                        score -= 10
+                        state["score"] -= 10
                     print(f"You {result} points!")
                     # Mark next round.
                     new_round = True
                     break
                 # Hit: draw a random card from the deck.
                 elif choice == 2:
-                    card = random.choice(deck)
-                    player.append(card)
-                    deck.remove(card)
+                    card = random.choice(state["deck"])
+                    state["player"].append(card)
+                    state["deck"].remove(card)
                     break
             # The player chose an option outside 1-2.
             print("Invalid option.")
@@ -161,7 +163,7 @@ def run():
         print("\n")
 
     # Print the player's score. (Reached only during game over.) 
-    print(f"Your score: {score}")
+    print(f"Your score: {state['score']}")
 
 # Run the game by calling the main game function.
 run()
