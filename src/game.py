@@ -42,9 +42,10 @@ def print_cards(hand, target):
 def run():
     deck = generate_deck()
 
-    hand = []
+    player = []
     dealer = []
     score = 0
+
     new_round = True
 
     while True:
@@ -55,10 +56,10 @@ def run():
             if len(deck) < 10:
                 deck = generate_deck()
 
-            hand.clear()
+            player.clear()
             for i in range(2):
                 card = random.choice(deck)
-                hand.append(card)
+                player.append(card)
                 deck.remove(card)
 
                 if card.type == CARD_ACE:
@@ -74,16 +75,16 @@ def run():
 
             new_round = False
 
-        print_cards(hand, "Your")
+        print_cards(player, "Your")
 
-        hand_value = get_hand_value(hand)
+        player_value = get_hand_value(player)
         dealer_value = get_hand_value(dealer)
 
-        if hand_value > 21:
+        if player_value > 21:
             print("You exceeded 21. Game over!")
             break
 
-        if (has_ace and has_ten) or hand_value == 21:
+        if (has_ace and has_ten) or player_value == 21:
             print("You hit blackjack! (21 points)")
             score += 21
             new_round = True
@@ -92,15 +93,14 @@ def run():
         while True:
             print("[1] Stand")
             print("[2] Hit")
-            print("Enter choice: ")
-            choice = input()
+            choice = input("Enter choice: ")
             if choice.isdigit():
                 choice = int(choice)
                 if choice == 1:
                     print_cards(dealer, "Dealer's")
 
                     result = ""
-                    if hand_value > dealer_value:
+                    if player_value > dealer_value:
                         result = "win 10"
                         score += 10
                     else:
@@ -112,7 +112,7 @@ def run():
                     break
                 elif choice == 2:
                     card = random.choice(deck)
-                    hand.append(card)
+                    player.append(card)
                     deck.remove(card)
                     break
             print("Invalid option.")
