@@ -104,6 +104,7 @@ def process_choices(state):
         choice = input("Enter choice: ")
         if choice.isdigit():
             choice = int(choice)
+
             # Stand: don't draw an additional card and compare the
             # player total with the dealer total.
             if choice == 1:
@@ -118,9 +119,9 @@ def process_choices(state):
                     result = "lose"
                     state["score"] -= POINTS_STAND
                 print(f"You {result} {POINTS_STAND} points!")
-                # Mark next round.
                 state["new_round"] = True
                 break
+
             # Hit: draw a random card from the deck.
             elif choice == 2:
                 card = random.choice(state["deck"])
@@ -154,13 +155,14 @@ def run():
         state["player_total"] = get_hand_total(state["player"])
         state["dealer_total"] = get_hand_total(state["dealer"])
 
-        # Bust. Getting a total greater than 21 in the player's hand
+        # Bust. A total greater than 21 in the player's hand
         # results in a game over.
         if state["player_total"] > TOTAL_BLACKJACK:
             print(f"You exceeded {TOTAL_BLACKJACK}. Game over!")
             break
 
-        # We've hit blackjack if the player hand's total is 21.
+        # Blackjack. A total of 21 in the player's hand results
+        # in winning the current round.
         if state["player_total"] == TOTAL_BLACKJACK:
             print(f"You hit blackjack! ({POINTS_BLACKJACK} points)")
             state["score"] += POINTS_BLACKJACK
@@ -172,7 +174,7 @@ def run():
 
         print("\n")
 
-    # Print the player's score. (Reached only during game over.) 
+    # Print the player's score (Reached only during game over).
     print(f"Your score: {state['score']}")
 
 # Run the game by calling the main game function.
