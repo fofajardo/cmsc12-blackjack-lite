@@ -67,9 +67,6 @@ def run():
     new_round = True
 
     while True:
-        has_ace = False
-        has_ten = False
-
         # We're in a new round.
         if new_round:
             # There are fewer than 10 cards left in the deck.
@@ -79,17 +76,23 @@ def run():
 
             # Reset player hand and draw two additional cards.
             player.clear()
+            card_ace = None
+            card_ten = None
+
             for i in range(2):
                 card = random.choice(deck)
                 player.append(card)
                 deck.remove(card)
-
                 # Check if our first two cards match a combination for
                 # hitting a blackjack early.
                 if card.type == CARD_ACE:
-                    has_ace = True
+                    card_ace = card
                 if card.value == 10:
-                    has_ten = True
+                    card_ten = ten
+
+            # Set the ace card's value to 11 if we've matched the combination.
+            if card_ace and card_ten:
+                card_ace.value = 11
 
             # Reset dealer hand and draw two additional cards.
             dealer.clear()
@@ -114,12 +117,8 @@ def run():
             print("You exceeded 21. Game over!")
             break
 
-        # Check if we've hit blackjack by looking at whether the player
-        # has an ace and a 10-value card combination OR if the value of
-        # all the player's cards is 21.
-        # XXX: we should probably change the value of ace instead
-        #      based on the spec; it's also probably cleaner that way.
-        if (has_ace and has_ten) or player_value == TOTAL_BLACKJACK:
+        # We've hit blackjack if the player hand's total is 21.
+        if player_value == TOTAL_BLACKJACK:
             print("You hit blackjack! (21 points)")
             score += TOTAL_BLACKJACK
             # Mark next round.
