@@ -53,6 +53,74 @@ def print_cards(hand, target):
         print(card.to_text(), end=" ")
     print()
 
+# Performs checks on whether a new deck should be generated and if
+# a blackjack is hit through an ace and 10-value card combination.
+def start_new_round(state):
+    # There are fewer than 10 cards left in the deck.
+    # Generate a new deck.
+    if len(state["deck"]) < 10:
+        state["deck"] = generate_deck()
+
+    # Reset player hand and draw two additional cards.
+    state["player"].clear()
+    card_ace = None
+    card_ten = None
+
+    for i in range(2):
+        card = random.choice(state["deck"])
+        state["player"].append(card)
+        state["deck"].remove(card)
+        # Check if our first two cards match a combination for
+        # hitting a blackjack early.
+        if card.type == CARD_ACE:
+            card_ace = card
+        if card.value == 10:
+            card_ten = card
+
+    # Set the ace card's value to 11 if we've matched the combination.
+    if card_ace and card_ten:
+        card_ace.value = 11
+
+    # Reset dealer hand and draw two additional cards.
+    state["dealer"].clear()
+    for i in range(2):
+        card = random.choice(state["deck"])
+        state["dealer"].append(card)
+        state["deck"].remove(card)
+
+def process_choices(state):
+    while True:
+        print("[1] Stand")
+        print("[2] Hit")
+        choice = input("Enter choice: ")
+        if choice.isdigit():
+            choice = int(choice)
+            # Stand: don't draw an additional card and compare the
+            # player total with the dealer total.
+            if choice == 1:
+                # Print the dealer's cards.
+                print_cards(state["dealer"], "Dealer's")
+                # Determine whether the player should win or lose points.
+                result = ""
+                if player_value > dealer_value:
+                    result = "win 10"
+                    state["score"] += 10
+                else:
+                    result = "lose 10"
+                    state["score"] -= 10
+                print(f"You {result} points!")
+                # Mark next round.
+                new_round = True
+                break
+            # Hit: draw a random card from the deck.
+            elif choice == 2:
+                card = random.choice(state["deck"])
+                state["player"].append(card)
+                state["deck"].remove(card)
+                break
+        # The player chose an option outside 1-2.
+        print("Invalid option.")
+
 # The main game function.
 def run():
     state = {
@@ -63,46 +131,13 @@ def run():
         # The player's score.
         "score": 0,
     }
-    # Determines if we're in a new round, which triggers checks on whether
-    # a new deck should be generated and if a blackjack is hit through
-    # an ace and 10-value card combination.
+    # Determines if we're in a new round.
     new_round = True
 
     while True:
         # We're in a new round.
         if new_round:
-            # There are fewer than 10 cards left in the deck.
-            # Generate a new deck.
-            if len(state["deck"]) < 10:
-                state["deck"] = generate_deck()
-
-            # Reset player hand and draw two additional cards.
-            state["player"].clear()
-            card_ace = None
-            card_ten = None
-
-            for i in range(2):
-                card = random.choice(state["deck"])
-                state["player"].append(card)
-                state["deck"].remove(card)
-                # Check if our first two cards match a combination for
-                # hitting a blackjack early.
-                if card.type == CARD_ACE:
-                    card_ace = card
-                if card.value == 10:
-                    card_ten = card
-
-            # Set the ace card's value to 11 if we've matched the combination.
-            if card_ace and card_ten:
-                card_ace.value = 11
-
-            # Reset dealer hand and draw two additional cards.
-            state["dealer"].clear()
-            for i in range(2):
-                card = random.choice(state["deck"])
-                state["dealer"].append(card)
-                state["deck"].remove(card)
-
+            start_new_round(state)
             # We're done and prevent these checks from occurring in the
             # next iteration unless we're in a new round again.
             new_round = False
@@ -128,37 +163,7 @@ def run():
             continue
 
         # Process player choices.
-        while True:
-            print("[1] Stand")
-            print("[2] Hit")
-            choice = input("Enter choice: ")
-            if choice.isdigit():
-                choice = int(choice)
-                # Stand: don't draw an additional card and compare the
-                # player total with the dealer total.
-                if choice == 1:
-                    # Print the dealer's cards.
-                    print_cards(state["dealer"], "Dealer's")
-                    # Determine whether the player should win or lose points.
-                    result = ""
-                    if player_value > dealer_value:
-                        result = "win 10"
-                        state["score"] += 10
-                    else:
-                        result = "lose 10"
-                        state["score"] -= 10
-                    print(f"You {result} points!")
-                    # Mark next round.
-                    new_round = True
-                    break
-                # Hit: draw a random card from the deck.
-                elif choice == 2:
-                    card = random.choice(state["deck"])
-                    state["player"].append(card)
-                    state["deck"].remove(card)
-                    break
-            # The player chose an option outside 1-2.
-            print("Invalid option.")
+        process_choices(state)
 
         print("\n")
 
