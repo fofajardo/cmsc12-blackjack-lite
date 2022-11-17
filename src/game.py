@@ -2,6 +2,8 @@ import random
 
 # The total a hand must have to hit blackjack.
 TOTAL_BLACKJACK = 21
+POINTS_BLACKJACK = TOTAL_BLACKJACK
+POINTS_STAND = 10
 
 # Define the cards that will be generated in the deck.
 SUITS = ["c", "d", "h", "s"]
@@ -103,12 +105,12 @@ def process_choices(state):
                 # Determine whether the player should win or lose points.
                 result = ""
                 if state["player_total"] > state["dealer_total"]:
-                    result = "win 10"
-                    state["score"] += 10
+                    result = "win"
+                    state["score"] += POINTS_STAND
                 else:
-                    result = "lose 10"
-                    state["score"] -= 10
-                print(f"You {result} points!")
+                    result = "lose"
+                    state["score"] -= POINTS_STAND
+                print(f"You {result} {POINTS_STAND} points!")
                 # Mark next round.
                 new_round = True
                 break
@@ -151,13 +153,13 @@ def run():
         # Bust. Getting a total greater than 21 in the player's hand
         # results in a game over.
         if state["player_total"] > TOTAL_BLACKJACK:
-            print("You exceeded 21. Game over!")
+            print(f"You exceeded {TOTAL_BLACKJACK}. Game over!")
             break
 
         # We've hit blackjack if the player hand's total is 21.
         if state["player_total"] == TOTAL_BLACKJACK:
-            print("You hit blackjack! (21 points)")
-            state["score"] += TOTAL_BLACKJACK
+            print(f"You hit blackjack! ({POINTS_BLACKJACK} points)")
+            state["score"] += POINTS_BLACKJACK
             # Mark next round.
             new_round = True
             continue
