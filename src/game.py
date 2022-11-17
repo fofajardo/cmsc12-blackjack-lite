@@ -1,5 +1,8 @@
 import random
 
+# The total a hand must have to hit blackjack.
+TOTAL_BLACKJACK = 21
+
 # Define the cards that will be generated in the deck.
 SUITS = ["c", "d", "h", "s"]
 CARDS_COURT = ["J", "Q", "K"]
@@ -105,10 +108,9 @@ def run():
         player_value = get_hand_value(player)
         dealer_value = get_hand_value(dealer)
 
-        # Bust. Getting a total of 21 in the player's hand
+        # Bust. Getting a total greater than 21 in the player's hand
         # results in a game over.
-        # TODO: 21 should probably be a constant.
-        if player_value > 21:
+        if player_value > TOTAL_BLACKJACK:
             print("You exceeded 21. Game over!")
             break
 
@@ -117,9 +119,9 @@ def run():
         # all the player's cards is 21.
         # XXX: we should probably change the value of ace instead
         #      based on the spec; it's also probably cleaner that way.
-        if (has_ace and has_ten) or player_value == 21:
+        if (has_ace and has_ten) or player_value == TOTAL_BLACKJACK:
             print("You hit blackjack! (21 points)")
-            score += 21
+            score += TOTAL_BLACKJACK
             # Mark next round.
             new_round = True
             continue
