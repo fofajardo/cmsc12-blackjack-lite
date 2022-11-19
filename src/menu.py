@@ -25,8 +25,8 @@ MENU_ITEMS = {
 def start():
     # Prints the intro text, which is retrieved from a text file.
     intro_file = open("intro.txt", "r")
-    for i in intro_file.readlines():
-        print(i, end="")
+    for i in intro_file.read().splitlines():
+        print(i.center(80))
     print()
 
     while True:
