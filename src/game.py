@@ -148,6 +148,9 @@ MENU_ITEMS = {
 
 # The main game function.
 def run():
+    global is_running
+    is_running = True
+
     state = {
         "deck": [],
         # Hands: cards held by the player and dealer.

@@ -68,6 +68,9 @@ MENU_ITEMS = {
 }
 
 def run():
+    global is_running
+    is_running = True
+
     # Prints the intro text, which is retrieved from a text file.
     intro_file = open("intro_scores.txt", "r")
     for i in intro_file.read().splitlines():
@@ -137,6 +140,9 @@ MENU_ITEMS_ADD_HS = {
 }
 
 def run_save_score(score):
+    global is_running
+    is_running = True
+
     # Print the player's score (Reached only during game over).
     print(f"Your score: {score}")
 
