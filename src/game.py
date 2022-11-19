@@ -11,6 +11,8 @@ SUITS = ["c", "d", "h", "s"]
 CARDS_COURT = ["J", "Q", "K"]
 CARD_ACE = "A"
 
+is_running = True
+
 # Card: stores the suit and type (court) or value (pip).
 # XXX: If we're not allowed to use OOP classes, this should probably
 # be converted to a function that is equivalent to what init does
@@ -123,6 +125,11 @@ def do_hit(state):
     state["player"].append(card)
     state["deck"].remove(card)
 
+# Surrender: stop playing and settle with your current score.
+def do_surrender(state):
+    global is_running
+    is_running = False
+
 MENU_ITEMS = {
     "1": {
         "label": "Stand",
@@ -131,6 +138,10 @@ MENU_ITEMS = {
     "2": {
         "label": "Hit",
         "action": do_hit
+    },
+    "3": {
+        "label": "Surrender",
+        "action": do_surrender
     }
 }
 
@@ -147,7 +158,7 @@ def run():
         "new_round": True,
     }
 
-    while True:
+    while is_running:
         # Start a new round (if applicable).
         start_new_round(state)
 
