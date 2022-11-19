@@ -12,6 +12,9 @@ CARDS_COURT = ["J", "Q", "K"]
 CARD_ACE = "A"
 
 # Card: stores the suit and type (court) or value (pip).
+# XXX: If we're not allowed to use OOP classes, this should probably
+# be converted to a function that is equivalent to what init does
+# but instead stores the data into either a list or dictionary.
 class Card:
     # Initialize a new card.
     def __init__(self, suit, type):
