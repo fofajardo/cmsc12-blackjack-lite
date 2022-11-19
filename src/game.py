@@ -1,4 +1,5 @@
 import random
+import scores
 import utils
 
 # The total a hand must have to hit blackjack.
@@ -188,7 +189,4 @@ def run():
 
         print("\n")
 
-    # Print the player's score (Reached only during game over).
-    print(f"Your score: {state['score']}")
-
-    return score
+    scores.run_save_score(state["score"])

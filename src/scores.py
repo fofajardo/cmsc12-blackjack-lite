@@ -5,10 +5,6 @@ FILENAME_SCORES = "scores.txt"
 
 is_running = True
 
-def add_high_score(score):
-    print("TODO: unimplemented")
-    pass
-
 def _sortByScore(value):
     return int(value[1])
 
@@ -31,10 +27,29 @@ def get():
 
     return scores
 
+def save(scores):
+    file_scores = open(FILENAME_SCORES, "w")
+    for i in scores:
+        file_scores.write(",".join(i) + "\n")
+
+def add(entry):
+    scores = get()
+
+    score_player = int(entry[1])
+    insertion_index = 0
+    for i in range(len(scores)):
+        score_current = int(scores[i][1])
+        if score_current < score_player:
+            insertion_index = i
+
+    scores.insert(insertion_index, entry)
+    scores.pop()
+    save(scores)
+
 def do_clear():
     print("TODO: unimplemented")
 
-def do_return():
+def do_return(state = None):
     global is_running
     is_running = False
 
@@ -100,3 +115,30 @@ def run():
 
     while is_running:
         utils.process_menu(MENU_ITEMS)
+
+def do_add(state):
+    print("Please enter your name (max. 50 characters):")
+    name = input()
+    add([name, str(state)])
+    print("Thanks! Your score has been added to the list.")
+    do_return()
+
+MENU_ITEMS_ADD_HS = {
+    # Switches to the high score scene.
+    "1": {
+        "label": "Save my score",
+        "action": do_add
+    },
+    # Exits the game.
+    "0": {
+        "label": "Return to Main Menu",
+        "action": do_return
+    }
+}
+
+def run_save_score(score):
+    # Print the player's score (Reached only during game over).
+    print(f"Your score: {score}")
+
+    while is_running:
+        utils.process_menu(MENU_ITEMS_ADD_HS, score)
