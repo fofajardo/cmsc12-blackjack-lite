@@ -1,4 +1,5 @@
 import random
+import utils
 
 # The total a hand must have to hit blackjack.
 TOTAL_BLACKJACK = 21
@@ -97,39 +98,38 @@ def start_new_round(state):
     # next iteration unless we're in a new round again.
     state["new_round"] = False
 
-def process_choices(state):
-    while True:
-        print("[1] Stand")
-        print("[2] Hit")
-        choice = input("Enter choice: ")
-        if choice.isdigit():
-            choice = int(choice)
+# Stand: don't draw an additional card and compare the
+# player total with the dealer total.
+def do_stand(state):
+    # Print the dealer's cards.
+    print_cards(state["dealer"], "Dealer's")
+    # Determine whether the player should win or lose points.
+    result = ""
+    if state["player_total"] > state["dealer_total"]:
+        result = "win"
+        state["score"] += POINTS_STAND
+    else:
+        result = "lose"
+        state["score"] -= POINTS_STAND
+    print(f"You {result} {POINTS_STAND} points!")
+    state["new_round"] = True
 
-            # Stand: don't draw an additional card and compare the
-            # player total with the dealer total.
-            if choice == 1:
-                # Print the dealer's cards.
-                print_cards(state["dealer"], "Dealer's")
-                # Determine whether the player should win or lose points.
-                result = ""
-                if state["player_total"] > state["dealer_total"]:
-                    result = "win"
-                    state["score"] += POINTS_STAND
-                else:
-                    result = "lose"
-                    state["score"] -= POINTS_STAND
-                print(f"You {result} {POINTS_STAND} points!")
-                state["new_round"] = True
-                break
+# Hit: draw a random card from the deck.
+def do_hit(state):
+    card = random.choice(state["deck"])
+    state["player"].append(card)
+    state["deck"].remove(card)
 
-            # Hit: draw a random card from the deck.
-            elif choice == 2:
-                card = random.choice(state["deck"])
-                state["player"].append(card)
-                state["deck"].remove(card)
-                break
-        # The player chose an option outside 1-2.
-        print("Invalid option.")
+MENU_ITEMS = {
+    "1": {
+        "label": "Stand",
+        "action": do_stand
+    },
+    "2": {
+        "label": "Hit",
+        "action": do_hit
+    }
+}
 
 # The main game function.
 def run():
@@ -170,7 +170,7 @@ def run():
             continue
 
         # Process player choices.
-        process_choices(state)
+        utils.process_menu(MENU_ITEMS, state)
 
         print("\n")
 
