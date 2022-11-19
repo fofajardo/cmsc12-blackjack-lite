@@ -8,6 +8,12 @@ is_running = True
 def _sortByScore(value):
     return int(value[1])
 
+def get_default():
+    scores = []
+    for i in range(10):
+        scores.append(["Juan de la Cruz", str(15 * i)])
+    return scores
+
 def get():
     scores = []
 
@@ -20,8 +26,7 @@ def get():
         file_scores.close()
 
     if len(scores) == 0:
-        for i in range(10):
-            scores.append(["Juan de la Cruz", str(15 * i)])
+        scores = get_default()
 
     scores.sort(key=_sortByScore, reverse=True)
 
@@ -47,7 +52,8 @@ def add(entry):
     save(scores)
 
 def do_clear():
-    print("TODO: unimplemented")
+    save(get_default())
+    print("The high scores list was cleared.")
 
 def do_return(state = None):
     global is_running
