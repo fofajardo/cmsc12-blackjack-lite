@@ -14,6 +14,14 @@ def get_default():
         scores.append(["Juan de la Cruz", str(15 * i)])
     return scores
 
+RESET_REASON_INVALID = "Your high scores file is invalid and was reset to default."
+
+def reset(reason):
+    print(reason)
+    scores = get_default()
+    save(scores)
+    return scores
+
 def get():
     scores = []
 
@@ -21,8 +29,18 @@ def get():
     if exists:
         file_scores = open(FILENAME_SCORES, "r")
         lines = file_scores.read().splitlines()
-        for line in lines:
-            scores.append(line.split(","))
+        # Check: do we have exactly 10 entries?
+        if len(lines) == 10:
+            for line in lines:
+                entry = line.split(",")
+                # Check: do we have a name-score pair and is the
+                # score a "digit" or a valid number?
+                if len(entry) != 2 or not entry[1].isdigit():
+                    scores = reset(RESET_REASON_INVALID)
+                    break
+                scores.append(entry)
+        else:
+            scores = reset(RESET_REASON_INVALID)
         file_scores.close()
 
     if len(scores) == 0:
@@ -52,8 +70,7 @@ def add(entry):
     save(scores)
 
 def do_clear():
-    save(get_default())
-    print("The high scores list was cleared.")
+    reset("The high scores list was cleared.")
 
 def do_return(state = None):
     global is_running
