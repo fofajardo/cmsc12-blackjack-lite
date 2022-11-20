@@ -77,11 +77,8 @@ def run():
     global is_running
     is_running = True
 
-    # Prints the intro text, which is retrieved from a text file.
-    intro_file = open("intro_scores.txt", "r")
-    for i in intro_file.read().splitlines():
+    for i in utils.strings["intro_hs"]:
         print(i.center(80))
-    intro_file.close()
     print()
 
     scores = get()

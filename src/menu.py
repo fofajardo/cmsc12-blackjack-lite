@@ -23,9 +23,7 @@ MENU_ITEMS = {
 
 # Start sequence: prints the intro and performs menu processing.
 def start():
-    # Prints the intro text, which is retrieved from a text file.
-    intro_file = open("intro.txt", "r")
-    for i in intro_file.read().splitlines():
+    for i in utils.strings["intro_mm"]:
         print(i.center(80))
     print()
 
