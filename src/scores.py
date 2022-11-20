@@ -126,8 +126,15 @@ def run():
         utils.process_menu(MENU_ITEMS)
 
 def do_add(state):
-    print("Please enter your name (max. 50 characters):")
-    name = input()
+    while True:
+        print("Please enter your name (max. 50 characters):")
+        name = input()
+
+        if len(name) > 50:
+            print("Your name should not be greater than 50 characters.")
+        else:
+            break
+
     add([name, str(state)])
     print("Thanks! Your score has been added to the list.")
     do_return()
