@@ -10,7 +10,7 @@ def _sortByScore(value):
 
 def get_default():
     scores = []
-    for i in range(10):
+    for i in range(10, 0, -1):
         scores.append(["Juan de la Cruz", str(15 * i)])
     return scores
 
