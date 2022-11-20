@@ -2,16 +2,39 @@
 # on user input, and provides a prompt.
 def process_menu(menu, state = None):
     # Print all menu items.
-    [print(f"[{i}] {menu[i]['label']}") for i in menu]
+    for i in menu:
+        menuitem = menu[i]
+        # Skip disabled menu items.
+        if "disabled" in menuitem:
+            continue
+        print(f"[{i}] {menuitem['label']}")
+
     # Handle user choice selection.
     choice = input("Enter choice: ").strip()
     if choice in menu:
-        if state != None:
-            menu[choice]["action"](state)
-        else:
-            menu[choice]["action"]()
-        return
+        menuitem = menu[choice]
+        # Ignore actions for disabled menu items.
+        if not "disabled" in menuitem:
+            if state != None:
+                menuitem["action"](state)
+            else:
+                menuitem["action"]()
+            return
+
     print("Invalid option.")
+
+# Set the disabled state of a menu item.
+def menuitem_setdisabled(menu, index, state):
+    if state == True:
+        menu[index]["disabled"] = True
+    elif state == False:
+        # This menu item is not disabled. Ignore.
+        if not "disabled" in menu[index]:
+            return
+
+        del menu[index]["disabled"]
+    else:
+        raise ValueError("'state' argument must be boolean.")
 
 # String constants.
 FILE_STRINGS = "strings.txt"
