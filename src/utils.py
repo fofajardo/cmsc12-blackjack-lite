@@ -6,7 +6,7 @@ def process_menu(menu, state = None):
     # Handle user choice selection.
     choice = input("Enter choice: ").strip()
     if choice in menu:
-        if state:
+        if state != None:
             menu[choice]["action"](state)
         else:
             menu[choice]["action"]()
