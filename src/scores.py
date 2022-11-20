@@ -173,5 +173,19 @@ def run_save_score(score):
     # Print the player's score (Reached only during game over).
     print(f"Your score: {score}")
 
+    # Get the high scores list.
+    scores = get()
+    score_min = int(scores[len(scores)-1][1])
+
+    # If the player got a score that is lower than the lowest score
+    # in the list of high scores, then don't bother storing it.
+    # Remove the option to save the score.
+    is_score_low = (score < score_min)
+    utils.menuitem_setdisabled(MENU_ITEMS_ADD_HS, "1", is_score_low)
+    if is_score_low:
+        print()
+        print("Your score is too low to be counted in the high score list.")
+        print("Better luck next time!")
+
     while is_running:
         utils.process_menu(MENU_ITEMS_ADD_HS, score)
