@@ -216,8 +216,9 @@ def process_menu(menu, state = None, center = True):
         ansiprint(_message, style, STYLE_TERMINATE)
 
     # Handle user choice selection.
-    choice = input("Enter choice: ").strip()
-
+    ansi("RED")
+    choice = input("Enter choice: " + ansicode(STYLE_TERMINATE) + ansicode("BE")).strip()
+    ansi(STYLE_TERMINATE)
     # Check if the choice is in the menu.
     # NOTE: KEY_CACHE is reserved and should NOT
     # be used as a choice key.
