@@ -191,7 +191,7 @@ def run_save(state):
 
         if "game_over" in state:
             reason = state["game_over"]
-            print(reason)
+            print(reason.center(80))
         
         # Print the player's score (Reached only during game over).
         utils.ansiprint("<YOUR SCORE>".center(80), "BE", "BD")
