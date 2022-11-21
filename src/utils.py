@@ -124,7 +124,10 @@ def clear_message():
     global _message
     _message = None
 
-def process_menu(menu, state = None):
+STYLE_MENU = ["RED","WHTB"]
+STYLE_TERMINATE = ["_", "$"]
+
+def process_menu(menu, state = None, center = True):
     global _message
     # Cache the following items, which will be stored in the given
     # menu dictionary: (a) labels with action caption, (b) width of
@@ -144,12 +147,12 @@ def process_menu(menu, state = None):
         # Store the separator.
         menu_separator = "═" * (cache["width"] + 2)
         cache["separator"] = menu_separator
-        cache["separator_top"] = f" ╔{menu_separator}╗ ".center(80)
-        cache["separator_bottom"] = f" ╚{menu_separator}╝ ".center(80)
+        cache["separator_top"] = f" ╔{menu_separator}╗ "
+        cache["separator_bottom"] = f" ╚{menu_separator}╝ "
         # Append the cached items to the menu dictionary.
         menu[KEY_CACHE] = cache
     # Print the top separator.
-    print(menu[KEY_CACHE]["separator_top"])
+    ansiprint(menu[KEY_CACHE]["separator_top"], STYLE_MENU, STYLE_TERMINATE, center)
     # Print all menu items.
     for i in menu:
         menuitem = menu[i]
@@ -166,24 +169,22 @@ def process_menu(menu, state = None):
             # Determine the padding between the inner text
             # and the end separator.
             padding = " " * (menu[KEY_CACHE]["width"] - len(label))
-            menu[i]["label_cached"] = f" ║ {label}{padding} ║ ".center(80)
+            menu[i]["label_cached"] = f" ║ {label}{padding} ║ "
             # Mark the menu item as "final" and update the value of
             # the label variable. Otherwise, the separators will
             # not be included.
             menu[i]["final"] = True
             label = menuitem["label_cached"]
         # Finally, print the centered and enclosed label.
-        print(label)
+        ansiprint(label, STYLE_MENU, STYLE_TERMINATE, center)
     # Print the bottom separator.
-    print(menu[KEY_CACHE]["separator_bottom"])
+    ansiprint(menu[KEY_CACHE]["separator_bottom"], STYLE_MENU, STYLE_TERMINATE, center)
 
     if _message != None:
+        style = "BGRN"
         if _message_is_error:
-            ansi("BRED")
-        else:
-            ansi("BGRN")
-        print(_message)
-        ansi("_")
+            style = "BRED"
+        ansiprint(_message, style, STYLE_TERMINATE)
 
     # Handle user choice selection.
     choice = input("Enter choice: ").strip()
