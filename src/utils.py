@@ -160,7 +160,8 @@ def process_menu(menu, state = None, center = True):
         if i == KEY_CACHE:
             continue
         # Skip disabled menu items.
-        if "disabled" in menuitem:
+        if "disabled" in menuitem or \
+           "hidden" in menu item:
             continue
         # Try to cache the center and enclosed label if it hasn't been
         # done already.
