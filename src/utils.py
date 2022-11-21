@@ -80,6 +80,33 @@ def ansi(keys):
     else:
         print(AEC[keys], end="")
 
+def ansicode(keys):
+    if isinstance(keys, list):
+        code = ""
+        for i in keys:
+            code += AEC[i]
+        return code
+    else:
+        return AEC[keys]
+
+def ansiprint(text, start_keys=None, end_keys=None, center=False):
+    code = ""
+    len_start = 0
+    if start_keys:
+        start = ansicode(start_keys)
+        code += start
+        len_start = len(start)
+    code += text
+    len_end = 0
+    if end_keys:
+        end = ansicode(end_keys)
+        code += end
+        len_end = len(end)
+    if center:
+        print(code.center(80 + len_start + len_end))
+    else:
+        print(code)
+
 # Processes all menu items, executes their associated action based
 # on user input, and provides a prompt.
 KEY_CACHE = "_cache"
