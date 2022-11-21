@@ -134,6 +134,16 @@ def _do_surrender(state):
     global is_running
     is_running = False
 
+def _do_cheatwin(state):
+    state["score"] += POINTS_STAND
+    utils.set_message(f"+{POINTS_STAND}", False)
+    state["new_round"] = True
+
+def _do_cheatlose(state):
+    state["score"] -= POINTS_STAND
+    utils.set_message(f"-{POINTS_STAND}")
+    state["new_round"] = True
+
 MENU_ITEMS = {
     "1": {
         "label": "Stand",
@@ -146,6 +156,16 @@ MENU_ITEMS = {
     "3": {
         "label": "Surrender",
         "action": _do_surrender
+    },
+    "klapaucius": {
+        "label": "Instant win",
+        "action": _do_cheatwin,
+        "hidden": True
+    },
+    "wannacry": {
+        "label": "Instant lose",
+        "action": _do_cheatlose,
+        "hidden": True
     }
 }
 
