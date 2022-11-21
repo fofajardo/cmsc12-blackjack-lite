@@ -65,9 +65,8 @@ def reset():
 def add(entry):
     global scores
     score_player = int(entry[1])
-    score_count = len(scores)
-    insertion_index = score_count - 1
-    for i in range(score_count - 1, -1, -1):
+    insertion_index = 0
+    for i in range(len(scores)):
         score_current = int(scores[i][1])
         if score_player > score_current:
             insertion_index = i
