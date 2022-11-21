@@ -136,7 +136,6 @@ def run_view():
         for i in utils.strings["intro_hs"]:
             print(i.center(80))
         utils.ansi("_")
-        print()
 
         scores = get()
 
