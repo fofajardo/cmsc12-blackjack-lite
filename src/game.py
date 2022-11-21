@@ -57,7 +57,7 @@ def get_hand_total(hand):
 
 # Prints all cards to console.
 def print_cards(hand, target):
-    print(f"{target} cards are:")
+    utils.ansiprint(f"{target} cards are:", "BE", utils.STYLE_TERMINATE)
     for card in hand:
         print(card.to_text(), end=" ")
     print()
@@ -107,20 +107,22 @@ def start_new_round(state):
 # Stand: don't draw an additional card and compare the
 # player total with the dealer total.
 def _do_stand(state):
-    # Print the dealer's cards.
-    # FIXME: These are invisible for now.
+    utils.ansi("@")
+    # Print the player's and dealer's cards.
+    print_cards(state["player"], "Your")
     print_cards(state["dealer"], "Dealer's")
     # Determine whether the player should win or lose points.
     result = ""
-    lost = False
+    style = "BGRN"
     if state["player_total"] > state["dealer_total"]:
         result = "win"
         state["score"] += POINTS_STAND
     else:
         result = "lose"
         state["score"] -= POINTS_STAND
-        lost = True
-    utils.set_message(f"You {result} {POINTS_STAND} points!", lost)
+        style = "BRED"
+    utils.ansiprint(f"You {result} {POINTS_STAND} points!".center(80), style, utils.STYLE_TERMINATE)
+    utils.prompt_enter()
     state["new_round"] = True
 
 # Hit: draw a random card from the deck.
@@ -206,8 +208,11 @@ def run():
         # Blackjack. A total of 21 in the player's hand results
         # in winning the current round.
         if state["player_total"] == TOTAL_BLACKJACK:
-            utils.set_message(f"You hit blackjack! ({POINTS_BLACKJACK} points)", False)
+            utils.ansiprint(
+                f"\nYou hit blackjack! ({POINTS_BLACKJACK} points)",
+                "BGRN", utils.STYLE_TERMINATE)
             state["score"] += POINTS_BLACKJACK
+            utils.prompt_enter()
             state["new_round"] = True
             continue
 
