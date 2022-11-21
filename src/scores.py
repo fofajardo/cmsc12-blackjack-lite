@@ -82,10 +82,10 @@ def _do_return(state = None):
 def _do_add(state):
     while True:
         print("Please enter your name (max. 50 characters):")
-        name = input()
+        name = input().strip()
 
-        if len(name) > 50:
-            print("Your name should not be greater than 50 characters.")
+        if len(name) == 0 or len(name) > 50:
+            print("Your name must be between 1-50 characters.")
         else:
             break
 
