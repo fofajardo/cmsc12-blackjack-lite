@@ -51,7 +51,6 @@ def load_strings(force_reload = False):
     # Don't load the strings file again unless we're forcing it.
     if strings and not force_reload:
         return
-    print("LOADED")
     # Initialize strings dictionary.
     strings = {}
     # Keep track of current section details.
