@@ -1,3 +1,5 @@
+import sys
+
 # ANSI escape codes.
 AEC = {
     # Common
@@ -73,8 +75,23 @@ AEC = {
     "BHWHT": "\033[1;97m"
 }
 
+# Using the ANSI escape code to toggle between bold and normal font states
+# triggers an odd bug on Windows Terminal, creating "lines" that don't
+# make any sense. To fix that, we'll just disable this functionality
+# instead. No "bold" for Windows users, then.
+if sys.platform == "win32":
+    AEC["BE"] = ""
+    AEC["BD"] = ""
+
+# Flip this to true to disable all ANSI escape codes.
+# Useful in terminals that don't support it, such as Windows'
+# default command prompt.
+DISABLE_AEC = False
+
 # Print an ANSI escape code given a key.
 def ansi(keys):
+    if DISABLE_AEC:
+        return
     if isinstance(keys, list):
         for i in keys:
             print(AEC[i], end="")
@@ -82,6 +99,8 @@ def ansi(keys):
         print(AEC[keys], end="")
 
 def ansicode(keys):
+    if DISABLE_AEC:
+        return ""
     if isinstance(keys, list):
         code = ""
         for i in keys:
@@ -91,6 +110,8 @@ def ansicode(keys):
         return AEC[keys]
 
 def ansiprint(text, start_keys=None, end_keys=None, center=False):
+    if DISABLE_AEC:
+        print(text)
     code = ""
     len_start = 0
     if start_keys:
