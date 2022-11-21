@@ -259,7 +259,7 @@ def run():
         # Bust. A total greater than 21 in the player's hand
         # results in a game over.
         if state["player_total"] > TOTAL_BLACKJACK:
-            print(f"You exceeded {TOTAL_BLACKJACK}. Game over!")
+            state["game_over"] = f"You exceeded {TOTAL_BLACKJACK}. Game over!"
             break
 
         # Blackjack. A total of 21 in the player's hand results
@@ -276,4 +276,4 @@ def run():
         # Process player choices.
         utils.process_menu(MENU_ITEMS, state)
 
-    scores.run_save(state["score"])
+    scores.run_save(state)

@@ -177,26 +177,33 @@ def run_view():
 
         utils.process_menu(MENU_ITEMS_VIEW)
 
-def run_save(score):
+def run_save(state):
     global is_running
     is_running = True
 
-    # Print the player's score (Reached only during game over).
-    print(f"Your score: {score}")
-
-    # Get the high scores list.
-    scores = get()
-    score_min = int(scores[len(scores)-1][1])
-
-    # If the player got a score that is lower than the lowest score
-    # in the list of high scores, then don't bother storing it.
-    # Remove the option to save the score.
-    is_score_low = (score < score_min)
-    utils.menuitem_setdisabled(MENU_ITEMS_ADD, "1", is_score_low)
-    if is_score_low:
-        print()
-        print("Your score is too low to be counted in the high score list.")
-        print("Better luck next time!")
+    score = state["score"]
 
     while is_running:
+        utils.ansi("@")
+        if "game_over" in state:
+            reason = state["game_over"]
+            print(reason)
+        
+        # Print the player's score (Reached only during game over).
+        print(f"Your score: {score}")
+
+        # Get the high scores list.
+        scores = get()
+        score_min = int(scores[len(scores)-1][1])
+
+        # If the player got a score that is lower than the lowest score
+        # in the list of high scores, then don't bother storing it.
+        # Remove the option to save the score.
+        is_score_low = (score < score_min)
+        utils.menuitem_setdisabled(MENU_ITEMS_ADD, "1", is_score_low)
+        if is_score_low:
+            print()
+            print("Your score is too low to be counted in the high score list.")
+            print("Better luck next time!")
+
         utils.process_menu(MENU_ITEMS_ADD, score)
