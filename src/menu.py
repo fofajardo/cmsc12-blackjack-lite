@@ -23,11 +23,12 @@ MENU_ITEMS = {
 
 # Start sequence: prints the intro and performs menu processing.
 def start():
-    for i in utils.strings["intro_mm"]:
-        print(i.center(80))
-    print()
-
     while True:
+        utils.ansi(["@", "_", "GRN"])
+        for i in utils.strings["intro_mm"]:
+            print(i.center(80))
+        utils.ansi("_")
+
         utils.process_menu(MENU_ITEMS)
 
 start()

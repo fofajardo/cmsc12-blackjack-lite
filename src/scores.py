@@ -89,11 +89,11 @@ def _do_add(state):
             break
 
     add([name, str(state)])
-    print("Thanks! Your score has been added to the list.")
+    utils.set_message("Thanks! Your score has been added to the list.", False)
     _do_return()
 
 def _do_clear():
-    print("The high scores list was cleared.")
+    utils.set_message("The high scores list was cleared.", False)
     reset()
 
 # The available menu items.
@@ -130,49 +130,51 @@ def run_view():
     global is_running
     is_running = True
 
-    for i in utils.strings["intro_hs"]:
-        print(i.center(80))
-    print()
+    while is_running:
+        utils.ansi(["@", "_", "GRN"])
+        for i in utils.strings["intro_hs"]:
+            print(i.center(80))
+        utils.ansi("_")
+        print()
 
-    scores = get()
+        scores = get()
 
-    divider = "━" * 80
+        divider = "━" * 80
 
-    print(divider)
+        print(divider)
 
-    headers = [
-        ["Rank", 14],
-        ["Name", 50],
-        ["Score", 14]
-    ]
-    header_count = len(headers)
-    for cell_i in range(header_count):
-        header = headers[cell_i][0]
-        width = headers[cell_i][1]
-        suffix = "┃"
-        if cell_i == (header_count - 1):
-            suffix = "\n"
-        print(header.center(width), end=suffix)
-
-    print(divider)
-
-    row_count = len(scores)
-    for row_i in range(row_count):
-        row = scores[row_i]
-        cells = [
-            str(row_i + 1).center(headers[0][1]),
-            row[0].center(headers[1][1]),
-            "  " + row[1].ljust(headers[2][1] - 2)
+        headers = [
+            ["Rank", 14],
+            ["Name", 50],
+            ["Score", 14]
         ]
+        header_count = len(headers)
         for cell_i in range(header_count):
-            suffix = "│"
+            header = headers[cell_i][0]
+            width = headers[cell_i][1]
+            suffix = "┃"
             if cell_i == (header_count - 1):
                 suffix = "\n"
-            print(cells[cell_i], end=suffix)
+            print(header.center(width), end=suffix)
 
-    print()
+        print(divider)
 
-    while is_running:
+        row_count = len(scores)
+        for row_i in range(row_count):
+            row = scores[row_i]
+            cells = [
+                str(row_i + 1).center(headers[0][1]),
+                row[0].center(headers[1][1]),
+                "  " + row[1].ljust(headers[2][1] - 2)
+            ]
+            for cell_i in range(header_count):
+                suffix = "│"
+                if cell_i == (header_count - 1):
+                    suffix = "\n"
+                print(cells[cell_i], end=suffix)
+
+        print()
+
         utils.process_menu(MENU_ITEMS_VIEW)
 
 def run_save(score):

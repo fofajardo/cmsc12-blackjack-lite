@@ -84,10 +84,20 @@ def ansi(keys):
 # on user input, and provides a prompt.
 KEY_CACHE = "_cache"
 
-message_before_choice = None
+_message = None
+_message_is_error = True
+
+def set_message(text, is_error = True):
+    global _message, _message_is_error
+    _message = text
+    _message_is_error = is_error
+
+def clear_message():
+    global _message
+    _message = None
 
 def process_menu(menu, state = None):
-    global message_before_choice
+    global _message
     # Cache the following items, which will be stored in the given
     # menu dictionary: (a) labels with action caption, (b) width of
     # the longest label, and (c) menu separator.
@@ -139,9 +149,12 @@ def process_menu(menu, state = None):
     # Print the bottom separator.
     print(menu[KEY_CACHE]["separator_bottom"])
 
-    if message_before_choice != None:
-        ansi("BRED")
-        print(message_before_choice)
+    if _message != None:
+        if _message_is_error:
+            ansi("BRED")
+        else:
+            ansi("BGRN")
+        print(_message)
         ansi("_")
 
     # Handle user choice selection.
@@ -154,13 +167,14 @@ def process_menu(menu, state = None):
         menuitem = menu[choice]
         # Ignore actions for disabled menu items.
         if not "disabled" in menuitem:
-            message_before_choice = None
+            clear_message()
             if state != None:
                 menuitem["action"](state)
             else:
                 menuitem["action"]()
             return
-    message_before_choice = "Invalid option!"
+
+    set_message("Invalid option!")
 
 # Set the disabled state of a menu item.
 def menuitem_setdisabled(menu, index, state):
