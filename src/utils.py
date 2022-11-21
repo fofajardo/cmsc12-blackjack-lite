@@ -1,17 +1,66 @@
 # Processes all menu items, executes their associated action based
 # on user input, and provides a prompt.
+KEY_CACHE = "_cache"
+
 def process_menu(menu, state = None):
+    # Cache the following items, which will be stored in the given
+    # menu dictionary: (a) labels with action caption, (b) width of
+    # the longest label, and (c) menu separator.
+    if KEY_CACHE not in menu:
+        # Initialize.
+        cache = {}
+        cache["width"] = 0
+        for i in menu:
+            # Store the label with action caption.
+            label = f"[{i}] {menu[i]['label']}"
+            menu[i]["label_cached"] = label
+            # Try to get the length of the longest label.
+            label_width = len(label)
+            if label_width > cache["width"]:
+                cache["width"] = label_width
+        # Store the separator.
+        menu_separator = "═" * (cache["width"] + 2)
+        cache["separator"] = menu_separator
+        cache["separator_top"] = f" ╔{menu_separator}╗ ".center(80)
+        cache["separator_bottom"] = f" ╚{menu_separator}╝ ".center(80)
+        # Append the cached items to the menu dictionary.
+        menu[KEY_CACHE] = cache
+    # Print the top separator.
+    print(menu[KEY_CACHE]["separator_top"])
     # Print all menu items.
     for i in menu:
         menuitem = menu[i]
+        # Ignore the cache entry.
+        if i == KEY_CACHE:
+            continue
         # Skip disabled menu items.
         if "disabled" in menuitem:
             continue
-        print(f"[{i}] {menuitem['label']}")
+        # Try to cache the center and enclosed label if it hasn't been
+        # done already.
+        label = menuitem["label_cached"]
+        if not "final" in menuitem:
+            # Determine the padding between the inner text
+            # and the end separator.
+            padding = " " * (menu[KEY_CACHE]["width"] - len(label))
+            menu[i]["label_cached"] = f" ║ {label}{padding} ║ ".center(80)
+            # Mark the menu item as "final" and update the value of
+            # the label variable. Otherwise, the separators will
+            # not be included.
+            menu[i]["final"] = True
+            label = menuitem["label_cached"]
+        # Finally, print the centered and enclosed label.
+        print(label)
+    # Print the bottom separator.
+    print(menu[KEY_CACHE]["separator_bottom"])
 
     # Handle user choice selection.
     choice = input("Enter choice: ").strip()
-    if choice in menu:
+
+    # Check if the choice is in the menu.
+    # NOTE: KEY_CACHE is reserved and should NOT
+    # be used as a choice key.
+    if choice in menu and choice != KEY_CACHE:
         menuitem = menu[choice]
         # Ignore actions for disabled menu items.
         if not "disabled" in menuitem:
