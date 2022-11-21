@@ -106,7 +106,7 @@ def start_new_round(state):
 
 # Stand: don't draw an additional card and compare the
 # player total with the dealer total.
-def do_stand(state):
+def _do_stand(state):
     # Print the dealer's cards.
     print_cards(state["dealer"], "Dealer's")
     # Determine whether the player should win or lose points.
@@ -121,28 +121,28 @@ def do_stand(state):
     state["new_round"] = True
 
 # Hit: draw a random card from the deck.
-def do_hit(state):
+def _do_hit(state):
     card = random.choice(state["deck"])
     state["player"].append(card)
     state["deck"].remove(card)
 
 # Surrender: stop playing and settle with your current score.
-def do_surrender(state):
+def _do_surrender(state):
     global is_running
     is_running = False
 
 MENU_ITEMS = {
     "1": {
         "label": "Stand",
-        "action": do_stand
+        "action": _do_stand
     },
     "2": {
         "label": "Hit",
-        "action": do_hit
+        "action": _do_hit
     },
     "3": {
         "label": "Surrender",
-        "action": do_surrender
+        "action": _do_surrender
     }
 }
 
