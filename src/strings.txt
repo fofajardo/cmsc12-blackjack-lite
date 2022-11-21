@@ -20,3 +20,10 @@ by Francis Fajardo
 for CMSC 12
 
 end
+
+string_ml enter_tc
+
+ ╔══════════════════════════════╗ 
+ ║ Press [Enter] to continue... ║ 
+ ╚══════════════════════════════╝ 
+end

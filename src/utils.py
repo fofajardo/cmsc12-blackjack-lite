@@ -126,6 +126,7 @@ def clear_message():
 
 STYLE_MENU = ["RED","WHTB"]
 STYLE_TERMINATE = ["_", "$"]
+STYLE_HIDDEN = ["BLK", "BLKB"]
 
 def process_menu(menu, state = None, center = True):
     global _message
@@ -218,6 +219,19 @@ def menuitem_setdisabled(menu, index, state):
         del menu[index]["disabled"]
     else:
         raise ValueError("'state' argument must be boolean.")
+
+# Prompt the user to press Enter before proceeding.
+def prompt_enter():
+    while True:
+        ansi("BRED")
+        for i in strings["enter_tc"]:
+            print(i.center(80))
+        ansi(STYLE_TERMINATE)
+
+        ansi(STYLE_HIDDEN)
+        input()
+        ansi(STYLE_TERMINATE)
+        break
 
 # String constants.
 FILE_STRINGS = "strings.txt"
