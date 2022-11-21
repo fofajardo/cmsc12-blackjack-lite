@@ -151,6 +151,7 @@ def clear_message():
     _message = None
 
 STYLE_MENU = ["RED","WHTB"]
+STYLE_MENU_LABEL = ["RED", "WHTB", "BE"]
 STYLE_TERMINATE = ["_", "$"]
 STYLE_HIDDEN = ["BLK", "BLKB"]
 
@@ -204,7 +205,7 @@ def process_menu(menu, state = None, center = True):
             menu[i]["final"] = True
             label = menuitem["label_cached"]
         # Finally, print the centered and enclosed label.
-        ansiprint(label, STYLE_MENU, STYLE_TERMINATE, center)
+        ansiprint(label, STYLE_MENU_LABEL, STYLE_TERMINATE, center)
     # Print the bottom separator.
     ansiprint(menu[KEY_CACHE]["separator_bottom"], STYLE_MENU, STYLE_TERMINATE, center)
 
