@@ -282,7 +282,7 @@ def load_strings(force_reload = False):
     section_type = None
     section_name = None
     # Open up the strings file and read it line-by-line.
-    strings_file = open(FILE_STRINGS, "r")
+    strings_file = open(FILE_STRINGS, "r", encoding="utf-8")
     for i in strings_file.read().splitlines():
         # Remove whitespace from current line.
         line = i.strip()

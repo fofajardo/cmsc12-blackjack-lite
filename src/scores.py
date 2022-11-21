@@ -24,7 +24,7 @@ def get():
     # Read the scores file if it exists.
     exists = os.path.exists(FILENAME_SCORES)
     if exists:
-        file_scores = open(FILENAME_SCORES, "r")
+        file_scores = open(FILENAME_SCORES, "r", encoding="utf-8")
         lines = file_scores.read().splitlines()
         # Check: do we have exactly 10 entries?
         if len(lines) == 10:
@@ -51,7 +51,7 @@ def get():
     return scores
 
 def save():
-    file_scores = open(FILENAME_SCORES, "w")
+    file_scores = open(FILENAME_SCORES, "w", encoding="utf-8")
     for i in scores:
         # Delimit score entries with a comma.
         file_scores.write(",".join(i) + "\n")
