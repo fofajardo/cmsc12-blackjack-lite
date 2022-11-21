@@ -108,16 +108,19 @@ def start_new_round(state):
 # player total with the dealer total.
 def _do_stand(state):
     # Print the dealer's cards.
+    # FIXME: These are invisible for now.
     print_cards(state["dealer"], "Dealer's")
     # Determine whether the player should win or lose points.
     result = ""
+    lost = False
     if state["player_total"] > state["dealer_total"]:
         result = "win"
         state["score"] += POINTS_STAND
     else:
         result = "lose"
         state["score"] -= POINTS_STAND
-    print(f"You {result} {POINTS_STAND} points!")
+        lost = True
+    utils.set_message(f"You {result} {POINTS_STAND} points!", lost)
     state["new_round"] = True
 
 # Hit: draw a random card from the deck.
@@ -163,6 +166,7 @@ def run():
     }
 
     while is_running:
+        utils.ansi("@")
         # Start a new round (if applicable).
         start_new_round(state)
 
@@ -182,14 +186,12 @@ def run():
         # Blackjack. A total of 21 in the player's hand results
         # in winning the current round.
         if state["player_total"] == TOTAL_BLACKJACK:
-            print(f"You hit blackjack! ({POINTS_BLACKJACK} points)")
+            utils.set_message(f"You hit blackjack! ({POINTS_BLACKJACK} points)", False)
             state["score"] += POINTS_BLACKJACK
             state["new_round"] = True
             continue
 
         # Process player choices.
         utils.process_menu(MENU_ITEMS, state)
-
-        print("\n")
 
     scores.run_save(state["score"])
