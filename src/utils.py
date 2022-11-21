@@ -117,7 +117,10 @@ _message_is_error = True
 
 def set_message(text, is_error = True):
     global _message, _message_is_error
-    _message = text
+    if _message:
+        _message += f"\n{text}"
+    else:
+        _message = text
     _message_is_error = is_error
 
 def clear_message():
