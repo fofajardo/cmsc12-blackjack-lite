@@ -72,3 +72,59 @@ Your score is too low to be counted in the high score list.
 Better luck next time!
 
 end
+
+string_ml num_neg
+░░░░
+░▄▄▄
+░░░░
+end
+string_ml num0
+░▄▀▄
+░█/█
+░░▀░
+end
+string_ml num1
+░▀█░
+░░█░
+░▀▀▀
+end
+string_ml num2
+░▀▀▄
+░▄▀░
+░▀▀▀
+end
+string_ml num3
+░▀▀█
+░░▀▄
+░▀▀░
+end
+string_ml num4
+░█░█
+░░▀█
+░░░▀
+end
+string_ml num5
+░█▀▀
+░▀▀▄
+░▀▀░
+end
+string_ml num6
+░▄▀▀
+░█▀▄
+░░▀░
+end
+string_ml num7
+░▀▀█
+░▄▀░
+░▀░░
+end
+string_ml num8
+░▄▀▄
+░▄▀▄
+░░▀░
+end
+string_ml num9
+░▄▀▄
+░░▀█
+░▀▀░
+end

@@ -108,6 +108,29 @@ def ansiprint(text, start_keys=None, end_keys=None, center=False):
     else:
         print(code)
 
+HEIGHT_BIG_NUM = 3
+def get_big_number(number):
+    text = str(number)
+    lines_merged = [""] * HEIGHT_BIG_NUM
+    for i in text:
+        lines = []
+        if i == "0" or \
+           i == "1" or \
+           i == "2" or \
+           i == "3" or \
+           i == "4" or \
+           i == "5" or \
+           i == "6" or \
+           i == "7" or \
+           i == "8" or \
+           i == "9":
+            lines = strings["num" + i]
+        elif i == "-":
+            lines = strings["num_neg"]
+        for i in range(HEIGHT_BIG_NUM):
+            lines_merged[i] += lines[i]
+    return lines_merged
+
 # Processes all menu items, executes their associated action based
 # on user input, and provides a prompt.
 KEY_CACHE = "_cache"
