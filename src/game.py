@@ -34,9 +34,6 @@ class Card:
         # If we're a pip card with a value other than 1, just
         # set the value.
         self.value = type
-    # Get a string representation of the card.
-    def to_text(self):
-        return self.type + self.suit
 
 # Generates a deck of cards, including all pips and court cards.
 def generate_deck():
@@ -55,11 +52,71 @@ def get_hand_total(hand):
         value += i.value
     return value
 
+# 0 = text only
+# 1 = ascii large
+# 2 = ascii small
+CARD_DISPLAY = 2
+
+# 0 = letters
+# 1 = symbols and colors
+SUIT_DISPLAY = 1
+
 # Prints all cards to console.
 def print_cards(hand, target):
     utils.ansiprint(f"{target} cards are:", "BE", utils.STYLE_TERMINATE)
-    for card in hand:
-        print(card.to_text(), end=" ")
+
+    # 0: Plain text-only cards.
+    if CARD_DISPLAY == 0:
+        for card in hand:
+            print(f"{card.type}{card.suit}", end=" ")
+    # 1/2: ASCII art-based cards.
+    elif CARD_DISPLAY == 1 or CARD_DISPLAY == 2:
+        # Get our target card graphic.
+        lines = []
+        # Large vs. small card display.
+        if CARD_DISPLAY == 2:
+            lines = utils.strings["card"]
+        else:
+            lines = utils.strings["card_sm"]
+        lines_count = len(lines)
+        # Initialize the list which will hold the merged cards.
+        lines_merged = [""] * lines_count
+        # Process all cards in hand.
+        for card in hand:
+            suit_ascii = card.suit
+            color = ""
+            if SUIT_DISPLAY == 1:
+                if card.suit == "c":
+                    suit_ascii = "♣"
+                    color = ["WHTB", "BBLK"]
+                elif card.suit == "d":
+                    suit_ascii = "♦"
+                    color = ["WHTB", "BRED"]
+                elif card.suit == "h":
+                    suit_ascii = "♥"
+                    color = ["WHTB", "BRED"]
+                elif card.suit == "s":
+                    suit_ascii = "♠"
+                    color = ["WHTB", "BBLK"]
+
+            suit_line = ((lines_count - 1) / 2)
+            for i in range(lines_count):
+                lines_merged[i] += utils.ansicode(color) + " "
+                # Substitute the suit and card value/type.
+                line = lines[i]
+                if i == suit_line:
+                    lines_merged[i] += line.format(suit_ascii)
+                else:
+                    type_padded = card.type
+                    # Add space before type if it's only a single character.
+                    if len(card.type) == 1:
+                        type_padded = " " + card.type
+                    lines_merged[i] += line.format(type_padded)
+
+                lines_merged[i] += " " + utils.ansicode(utils.STYLE_TERMINATE) + " "
+        # Print all merged cards.
+        for i in lines_merged:
+            print(i)
     print()
 
 # Performs checks on whether a new deck should be generated and if
