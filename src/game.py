@@ -192,4 +192,4 @@ def run():
 
         print("\n")
 
-    scores.run_save_score(state["score"])
+    scores.run_save(state["score"])

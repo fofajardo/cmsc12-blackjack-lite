@@ -3,7 +3,7 @@ import os
 
 FILENAME_SCORES = "scores.txt"
 
-is_running = True
+RESET_REASON_INVALID = "Your high scores file is invalid and was reset to default."
 
 def _sortByScore(value):
     return int(value[1])
@@ -12,14 +12,6 @@ def get_default():
     scores = []
     for i in range(10, 0, -1):
         scores.append(["Juan de la Cruz", str(15 * i)])
-    return scores
-
-RESET_REASON_INVALID = "Your high scores file is invalid and was reset to default."
-
-def reset(reason):
-    print(reason)
-    scores = get_default()
-    save(scores)
     return scores
 
 def get():
@@ -55,6 +47,12 @@ def save(scores):
     for i in scores:
         file_scores.write(",".join(i) + "\n")
 
+def reset(reason):
+    print(reason)
+    scores = get_default()
+    save(scores)
+    return scores
+
 def add(entry):
     scores = get()
 
@@ -69,28 +67,58 @@ def add(entry):
     scores.pop()
     save(scores)
 
-def do_clear():
-    reset("The high scores list was cleared.")
-
-def do_return(state = None):
+def _do_return(state = None):
     global is_running
     is_running = False
 
+def _do_add(state):
+    while True:
+        print("Please enter your name (max. 50 characters):")
+        name = input()
+
+        if len(name) > 50:
+            print("Your name should not be greater than 50 characters.")
+        else:
+            break
+
+    add([name, str(state)])
+    print("Thanks! Your score has been added to the list.")
+    _do_return()
+
+def _do_clear():
+    reset("The high scores list was cleared.")
+
 # The available menu items.
-MENU_ITEMS = {
+
+MENU_ITEMS_ADD = {
     # Switches to the high score scene.
     "1": {
-        "label": "Clear High Scores",
-        "action": do_clear
+        "label": "Save my score",
+        "action": _do_add
     },
     # Exits the game.
     "0": {
         "label": "Return to Main Menu",
-        "action": do_return
+        "action": _do_return
     }
 }
 
-def run():
+MENU_ITEMS_VIEW = {
+    # Switches to the high score scene.
+    "1": {
+        "label": "Clear High Scores",
+        "action": _do_clear
+    },
+    # Exits the game.
+    "0": {
+        "label": "Return to Main Menu",
+        "action": _do_return
+    }
+}
+
+is_running = True
+
+def run_view():
     global is_running
     is_running = True
 
@@ -137,36 +165,9 @@ def run():
     print()
 
     while is_running:
-        utils.process_menu(MENU_ITEMS)
+        utils.process_menu(MENU_ITEMS_VIEW)
 
-def do_add(state):
-    while True:
-        print("Please enter your name (max. 50 characters):")
-        name = input()
-
-        if len(name) > 50:
-            print("Your name should not be greater than 50 characters.")
-        else:
-            break
-
-    add([name, str(state)])
-    print("Thanks! Your score has been added to the list.")
-    do_return()
-
-MENU_ITEMS_ADD_HS = {
-    # Switches to the high score scene.
-    "1": {
-        "label": "Save my score",
-        "action": do_add
-    },
-    # Exits the game.
-    "0": {
-        "label": "Return to Main Menu",
-        "action": do_return
-    }
-}
-
-def run_save_score(score):
+def run_save(score):
     global is_running
     is_running = True
 
@@ -181,11 +182,11 @@ def run_save_score(score):
     # in the list of high scores, then don't bother storing it.
     # Remove the option to save the score.
     is_score_low = (score < score_min)
-    utils.menuitem_setdisabled(MENU_ITEMS_ADD_HS, "1", is_score_low)
+    utils.menuitem_setdisabled(MENU_ITEMS_ADD, "1", is_score_low)
     if is_score_low:
         print()
         print("Your score is too low to be counted in the high score list.")
         print("Better luck next time!")
 
     while is_running:
-        utils.process_menu(MENU_ITEMS_ADD_HS, score)
+        utils.process_menu(MENU_ITEMS_ADD, score)

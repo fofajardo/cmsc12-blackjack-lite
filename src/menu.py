@@ -12,7 +12,7 @@ MENU_ITEMS = {
     # Switches to the high score scene.
     "2": {
         "label": "View High Scores",
-        "action": scores.run
+        "action": scores.run_view
     },
     # Exits the game.
     "0": {
