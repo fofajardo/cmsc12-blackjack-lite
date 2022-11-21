@@ -259,6 +259,7 @@ def run():
         # Bust. A total greater than 21 in the player's hand
         # results in a game over.
         if state["player_total"] > TOTAL_BLACKJACK:
+            utils.prompt_enter()
             state["game_over"] = f"You exceeded {TOTAL_BLACKJACK}. Game over!"
             break
 
