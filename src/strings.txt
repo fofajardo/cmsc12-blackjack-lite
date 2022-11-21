@@ -21,6 +21,14 @@ for CMSC 12
 
 end
 
+string_ml game_over
+
+░█▀▀░█▀█░█▄█░█▀▀░░░█▀█░█░█░█▀▀░█▀▄
+░█░█░█▀█░█░█░█▀▀░░░█░█░▀▄▀░█▀▀░█▀▄
+░▀▀▀░▀░▀░▀░▀░▀▀▀░░░▀▀▀░░▀░░▀▀▀░▀░▀
+
+end
+
 string_ml enter_tc
 
  ╔══════════════════════════════╗ 
@@ -56,4 +64,11 @@ string_ml card_sm
 ║            ║
 ║          {}║
 ╚════════════╝
+end
+
+string_ml score_low
+
+Your score is too low to be counted in the high score list.
+Better luck next time!
+
 end

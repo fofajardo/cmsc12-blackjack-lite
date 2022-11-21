@@ -184,13 +184,17 @@ def run_save(state):
     score = state["score"]
 
     while is_running:
-        utils.ansi("@")
+        utils.ansi(["@", "_", "GRN"])
+        for i in utils.strings["game_over"]:
+            print(i.center(80))
+        utils.ansi("_")
+
         if "game_over" in state:
             reason = state["game_over"]
             print(reason)
         
         # Print the player's score (Reached only during game over).
-        print(f"Your score: {score}")
+        print(f"Your score: {score}".center(80))
 
         # Get the high scores list.
         scores = get()
@@ -202,8 +206,7 @@ def run_save(state):
         is_score_low = (score < score_min)
         utils.menuitem_setdisabled(MENU_ITEMS_ADD, "1", is_score_low)
         if is_score_low:
-            print()
-            print("Your score is too low to be counted in the high score list.")
-            print("Better luck next time!")
+            for i in utils.strings["score_low"]:
+                print(i.center(80))
 
         utils.process_menu(MENU_ITEMS_ADD, score)
