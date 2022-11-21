@@ -3,10 +3,10 @@ import os
 
 FILENAME_SCORES = "scores.txt"
 
-RESET_REASON_INVALID = "Your high scores file is invalid and was reset to default."
-
 def _sortByScore(value):
     return int(value[1])
+
+scores = None
 
 def get_default():
     scores = []
@@ -15,8 +15,13 @@ def get_default():
     return scores
 
 def get():
+    global scores
+    # Don't read the scores file again if we have loaded it already.
+    if scores:
+        return scores
+    # Initialize scores to an empty list.
     scores = []
-
+    # Read the scores file if it exists.
     exists = os.path.exists(FILENAME_SCORES)
     if exists:
         file_scores = open(FILENAME_SCORES, "r")
@@ -28,44 +33,46 @@ def get():
                 # Check: do we have a name-score pair and is the
                 # score a "digit" or a valid number?
                 if len(entry) != 2 or not entry[1].isdigit():
-                    scores = reset(RESET_REASON_INVALID)
+                    # Remove any previously added entries. We don't
+                    # need those anymore.
+                    scores.clear()
                     break
                 scores.append(entry)
-        else:
-            scores = reset(RESET_REASON_INVALID)
         file_scores.close()
-
+    # If the scores list is still empty at this point...
     if len(scores) == 0:
+        # This is already generated in descending order, so there's
+        # no need to sort it. Just get the default list.
         scores = get_default()
-
-    scores.sort(key=_sortByScore, reverse=True)
-
+    # Otherwise, sort the loaded score list. It is possible that it is
+    # unsorted and we would not want to display that to the player.
+    else:
+        scores.sort(key=_sortByScore, reverse=True)
     return scores
 
-def save(scores):
+def save():
     file_scores = open(FILENAME_SCORES, "w")
     for i in scores:
+        # Delimit score entries with a comma.
         file_scores.write(",".join(i) + "\n")
+    file_scores.close()
 
-def reset(reason):
-    print(reason)
+def reset():
+    global scores
     scores = get_default()
-    save(scores)
-    return scores
+    save()
 
 def add(entry):
-    scores = get()
-
+    global scores
     score_player = int(entry[1])
     insertion_index = 0
     for i in range(len(scores)):
         score_current = int(scores[i][1])
         if score_current < score_player:
             insertion_index = i
-
     scores.insert(insertion_index, entry)
     scores.pop()
-    save(scores)
+    save()
 
 def _do_return(state = None):
     global is_running
@@ -86,7 +93,8 @@ def _do_add(state):
     _do_return()
 
 def _do_clear():
-    reset("The high scores list was cleared.")
+    print("The high scores list was cleared.")
+    reset()
 
 # The available menu items.
 
