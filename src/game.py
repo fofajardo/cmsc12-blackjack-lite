@@ -14,42 +14,41 @@ CARD_ACE = "A"
 
 is_running = True
 
-# Card: stores the suit and type (court) or value (pip).
-# XXX: If we're not allowed to use OOP classes, this should probably
-# be converted to a function that is equivalent to what init does
-# but instead stores the data into either a list or dictionary.
-class Card:
-    # Initialize a new card.
-    def __init__(self, suit, type):
-        self.suit = suit
-        self.type = str(type)
-        # Card with one (1) pip: ace
-        if type == 1:
-            self.type = CARD_ACE
-        # Court cards: their value is 10 by default.
-        elif type in CARDS_COURT:
-            self.type = type
-            self.value = 10
-            return
-        # If we're a pip card with a value other than 1, just
-        # set the value.
-        self.value = type
+# Card index constants.
+CI_SUIT = 0
+CI_TYPE = 1
+CI_VALUE = 2
+
+# Create a new card, which stores the assigned suit, type, and value.
+def new_card(suit, type_or_value):
+    card = [""] * 3
+    card[CI_SUIT] = suit               # 0: Suit
+    card[CI_TYPE] = str(type_or_value) # 1: Card type (pip/ace/court)
+    card[CI_VALUE] = type_or_value     # 2: Card value
+    # Card with one (1) pip: ace
+    if type_or_value == 1:
+        card[CI_TYPE] = CARD_ACE
+    # Court cards: their value is 10 by default.
+    elif type_or_value in CARDS_COURT:
+        card[CI_VALUE] = 10
+    # Return a list containing information about the card.
+    return card
 
 # Generates a deck of cards, including all pips and court cards.
 def generate_deck():
     deck = []
     for suit in SUITS:
         for pip in range(1, 11):
-            deck.append(Card(suit, pip))
+            deck.append(new_card(suit, pip))
         for court in CARDS_COURT:
-            deck.append(Card(suit, court))
+            deck.append(new_card(suit, court))
     return deck
 
 # Retrieves the value of all the cards in a hand.
 def get_hand_total(hand):
     value = 0
     for i in hand:
-        value += i.value
+        value += i[CI_VALUE]
     return value
 
 # 0 = text only
@@ -68,7 +67,7 @@ def print_cards(hand, target):
     # 0: Plain text-only cards.
     if CARD_DISPLAY == 0:
         for card in hand:
-            print(f"{card.type}{card.suit}", end=" ")
+            print(f"{card[CI_TYPE]}{card[CI_SUIT]}", end=" ")
     # 1/2: ASCII art-based cards.
     elif CARD_DISPLAY == 1 or CARD_DISPLAY == 2:
         # Get our target card graphic.
@@ -83,19 +82,19 @@ def print_cards(hand, target):
         lines_merged = [""] * lines_count
         # Process all cards in hand.
         for card in hand:
-            suit_ascii = card.suit
+            suit_ascii = card[CI_SUIT]
             color = ""
             if SUIT_DISPLAY == 1:
-                if card.suit == "c":
+                if card[CI_SUIT] == "c":
                     suit_ascii = "♣"
                     color = ["WHTB", "BBLK"]
-                elif card.suit == "d":
+                elif card[CI_SUIT] == "d":
                     suit_ascii = "♦"
                     color = ["WHTB", "BRED"]
-                elif card.suit == "h":
+                elif card[CI_SUIT] == "h":
                     suit_ascii = "♥"
                     color = ["WHTB", "BRED"]
-                elif card.suit == "s":
+                elif card[CI_SUIT] == "s":
                     suit_ascii = "♠"
                     color = ["WHTB", "BBLK"]
 
@@ -107,10 +106,10 @@ def print_cards(hand, target):
                 if i == suit_line:
                     lines_merged[i] += line.format(suit_ascii)
                 else:
-                    type_padded = card.type
+                    type_padded = card[CI_TYPE]
                     # Add space before type if it's only a single character.
-                    if len(card.type) == 1:
-                        type_padded = " " + card.type
+                    if len(card[CI_TYPE]) == 1:
+                        type_padded = " " + card[CI_TYPE]
                     lines_merged[i] += line.format(type_padded)
 
                 lines_merged[i] += " " + utils.ansicode(utils.STYLE_TERMINATE) + " "
@@ -141,14 +140,14 @@ def start_new_round(state):
         state["deck"].remove(card)
         # Check if our first two cards match a combination for
         # hitting a blackjack early.
-        if card.type == CARD_ACE:
+        if card[CI_TYPE] == CARD_ACE:
             card_ace = card
-        if card.value == 10:
+        if card[CI_VALUE] == 10:
             card_ten = card
 
     # Set the ace card's value to 11 if we've matched the combination.
     if card_ace and card_ten:
-        card_ace.value = 11
+        card_ace[CI_VALUE] = 11
 
     # Reset dealer hand and draw two additional cards.
     state["dealer"].clear()
