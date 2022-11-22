@@ -1,5 +1,3 @@
-import sys
-
 # ANSI escape codes.
 AEC = {
     # Common
@@ -74,14 +72,6 @@ AEC = {
     "BHCYN": "\033[1;96m",
     "BHWHT": "\033[1;97m"
 }
-
-# Using the ANSI escape code to toggle between bold and normal font states
-# triggers an odd bug on Windows Terminal, creating "lines" that don't
-# make any sense. To fix that, we'll just disable this functionality
-# instead. No "bold" for Windows users, then.
-if sys.platform == "win32":
-    AEC["BE"] = ""
-    AEC["BD"] = ""
 
 # Flip this to true to disable all ANSI escape codes.
 # Useful in terminals that don't support it, such as Windows'
