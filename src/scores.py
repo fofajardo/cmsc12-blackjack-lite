@@ -184,17 +184,17 @@ def run_save(state):
     score = state["score"]
 
     while is_running:
-        utils.ansi(["@", "_", "GRN"])
+        utils.ansi(["@", "GRN"])
         for i in utils.strings["game_over"]:
             print(i.center(80))
-        utils.ansi("_")
+        utils.ansi(utils.STYLE_TERMINATE)
 
         if "game_over" in state:
             reason = state["game_over"]
             print(reason.center(80))
         
         # Print the player's score (Reached only during game over).
-        utils.ansiprint("<YOUR SCORE>".center(80), "BE", "BD")
+        utils.ansiprint("<YOUR SCORE>".center(80), "BE", utils.STYLE_TERMINATE)
         for i in utils.get_big_number(score):
             print(i.center(80))
 
