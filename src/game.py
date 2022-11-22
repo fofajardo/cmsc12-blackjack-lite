@@ -63,7 +63,7 @@ SUIT_DISPLAY = 1
 
 # Prints all cards to console.
 def print_cards(hand, target):
-    utils.ansiprint(f"{target} cards are:", "BE", utils.STYLE_TERMINATE)
+    utils.ansiprint(f"{target} cards are:", "BE")
 
     # 0: Plain text-only cards.
     if CARD_DISPLAY == 0:
@@ -178,7 +178,7 @@ def _do_stand(state):
         result = "lose"
         state["score"] -= POINTS_STAND
         style = "BRED"
-    utils.ansiprint(f"You {result} {POINTS_STAND} points!".center(80), style, utils.STYLE_TERMINATE)
+    utils.ansiprint(f"You {result} {POINTS_STAND} points!".center(80), style)
     utils.prompt_enter()
     state["new_round"] = True
 
@@ -268,7 +268,7 @@ def run():
         if state["player_total"] == TOTAL_BLACKJACK:
             utils.ansiprint(
                 f"\nYou hit blackjack! ({POINTS_BLACKJACK} points)",
-                "BGRN", utils.STYLE_TERMINATE)
+                "BGRN")
             state["score"] += POINTS_BLACKJACK
             utils.prompt_enter()
             state["new_round"] = True

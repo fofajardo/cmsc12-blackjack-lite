@@ -194,7 +194,7 @@ def run_save(state):
             print(reason.center(80))
         
         # Print the player's score (Reached only during game over).
-        utils.ansiprint("<YOUR SCORE>".center(80), "BE", utils.STYLE_TERMINATE)
+        utils.ansiprint("<YOUR SCORE>".center(80), "BE")
         for i in utils.get_big_number(score):
             print(i.center(80))
 

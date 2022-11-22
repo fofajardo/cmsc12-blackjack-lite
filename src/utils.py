@@ -78,6 +78,12 @@ AEC = {
 # default command prompt.
 DISABLE_AEC = False
 
+# Common AEC combinations (styles).
+STYLE_MENU = ["RED","WHTB"]
+STYLE_MENU_LABEL = ["RED", "WHTB", "BE"]
+STYLE_TERMINATE = ["_", "$"]
+STYLE_HIDDEN = ["BLK", "BLKB"]
+
 # Print an ANSI escape code given a key.
 def ansi(keys):
     if DISABLE_AEC:
@@ -99,7 +105,7 @@ def ansicode(keys):
     else:
         return AEC[keys]
 
-def ansiprint(text, start_keys=None, end_keys=None, center=False):
+def ansiprint(text, start_keys=None, end_keys=STYLE_TERMINATE, center=False):
     if DISABLE_AEC:
         print(text)
     code = ""
@@ -161,11 +167,6 @@ def clear_message():
     global _message
     _message = None
 
-STYLE_MENU = ["RED","WHTB"]
-STYLE_MENU_LABEL = ["RED", "WHTB", "BE"]
-STYLE_TERMINATE = ["_", "$"]
-STYLE_HIDDEN = ["BLK", "BLKB"]
-
 def process_menu(menu, state = None, center = True):
     global _message
     # Cache the following items, which will be stored in the given
@@ -191,7 +192,7 @@ def process_menu(menu, state = None, center = True):
         # Append the cached items to the menu dictionary.
         menu[KEY_CACHE] = cache
     # Print the top separator.
-    ansiprint(menu[KEY_CACHE]["separator_top"], STYLE_MENU, STYLE_TERMINATE, center)
+    ansiprint(menu[KEY_CACHE]["separator_top"], STYLE_MENU, center=center)
     # Print all menu items.
     for i in menu:
         menuitem = menu[i]
@@ -216,15 +217,15 @@ def process_menu(menu, state = None, center = True):
             menu[i]["final"] = True
             label = menuitem["label_cached"]
         # Finally, print the centered and enclosed label.
-        ansiprint(label, STYLE_MENU_LABEL, STYLE_TERMINATE, center)
+        ansiprint(label, STYLE_MENU_LABEL, center=center)
     # Print the bottom separator.
-    ansiprint(menu[KEY_CACHE]["separator_bottom"], STYLE_MENU, STYLE_TERMINATE, center)
+    ansiprint(menu[KEY_CACHE]["separator_bottom"], STYLE_MENU, center=center)
 
     if _message != None:
         style = "BGRN"
         if _message_is_error:
             style = "BRED"
-        ansiprint(_message, style, STYLE_TERMINATE)
+        ansiprint(_message, style)
 
     # Handle user choice selection.
     ansi("RED")
