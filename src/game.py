@@ -193,6 +193,13 @@ def _do_surrender(state):
     global is_running
     is_running = False
 
+def _do_viewscore(state):
+    utils.ansi("@")
+    utils.ansiprint("<YOUR SCORE>".center(80), "BE")
+    for i in utils.get_big_number(state["score"]):
+        print(i.center(80))
+    utils.prompt_enter()
+
 def _do_cheatwin(state):
     state["score"] += POINTS_STAND
     utils.set_message(f"+{POINTS_STAND}", False)
@@ -213,6 +220,10 @@ MENU_ITEMS = {
         "action": _do_hit
     },
     "3": {
+        "label": "View Score",
+        "action": _do_viewscore
+    },
+    "4": {
         "label": "Surrender",
         "action": _do_surrender
     },
