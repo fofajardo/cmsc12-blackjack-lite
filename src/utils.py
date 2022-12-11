@@ -224,7 +224,7 @@ def menuitem_setdisabled(menu, index, state):
 
         del menu[index]["disabled"]
     else:
-        raise ValueError("'state' argument must be boolean.")
+        print("'state' argument must be boolean.")
 
 def prompt_enter():
     """Prompt the user to press Enter before proceeding."""
@@ -301,7 +301,7 @@ def load_strings(force_reload = False):
                 section_name = header[1]
             # Check: Throw on stray keywords.
             else:
-                raise ValueError(f"Stray '{line}' on strings file.")
+                print(f"Stray '{line}' on strings file.")
 
             # Create a new list or dictionary if the section name does
             # not yet exist. Otherwise, merge their contents.
