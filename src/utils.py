@@ -84,8 +84,9 @@ STYLE_MENU_LABEL = ["RED", "WHTB", "BE"]
 STYLE_TERMINATE = ["_", "$"]
 STYLE_HIDDEN = ["BLK", "BLKB"]
 
-# Print an ANSI escape code given a key.
 def ansi(keys):
+    """Print an ANSI escape code given a key list."""
+    # Don't print anything if AECs are disabled.
     if DISABLE_AEC:
         return
     if isinstance(keys, list):
@@ -95,6 +96,8 @@ def ansi(keys):
         print(AEC[keys], end="")
 
 def ansicode(keys):
+    """Return a string with the ANSI escape code given a key list."""
+    # Don't print anything if AECs are disabled.
     if DISABLE_AEC:
         return ""
     if isinstance(keys, list):
@@ -106,20 +109,35 @@ def ansicode(keys):
         return AEC[keys]
 
 def ansiprint(text, start_keys=None, end_keys=STYLE_TERMINATE, center=False):
+    """Print text that is affixed with an ANSI escape code.
+
+    Keyword arguments:
+    text -- the text to be displayed
+    start_keys -- list corresponding to ANSI escape codes (default None)
+    end_keys -- list corresponding to ANSI escape codes (default STYLE_TERMINATE)
+    center -- determines if the text should be centered
+    """
+    # Remove start and end keys if AECs are disabled.
     if DISABLE_AEC:
-        print(text)
+        start_keys = None
+        end_keys = None
+    # Holds processed text.
     code = ""
+    # Add ANSI escape codes to the beginning if needed.
     len_start = 0
     if start_keys:
         start = ansicode(start_keys)
         code += start
         len_start = len(start)
+    # Append the text
     code += text
+    # Add ANSI escape codes to the end if needed.
     len_end = 0
     if end_keys:
         end = ansicode(end_keys)
         code += end
         len_end = len(end)
+    # Print the processed text.
     if center:
         print(code.center(80 + len_start + len_end))
     else:
@@ -127,8 +145,11 @@ def ansiprint(text, start_keys=None, end_keys=STYLE_TERMINATE, center=False):
 
 HEIGHT_BIG_NUM = 3
 def get_big_number(number):
+    """Return a list containing 'big' number strings."""
+    # Convert the number into its string representation.
     text = str(number)
     lines_merged = [""] * HEIGHT_BIG_NUM
+    # Determine what number.
     for i in text:
         lines = []
         if i == "0" or \
@@ -142,6 +163,7 @@ def get_big_number(number):
            i == "8" or \
            i == "9":
             lines = strings["num" + i]
+        # Handle negative or minus sign.
         elif i == "-":
             lines = strings["num_neg"]
         for i in range(HEIGHT_BIG_NUM):
@@ -156,6 +178,12 @@ _message = None
 _message_is_error = True
 
 def set_message(text, is_error = True):
+    """Set the status message.
+
+    Keyword arguments:
+    text -- the text to be displayed
+    is_error -- determines if the text should be colored as an error
+    """
     global _message, _message_is_error
     if _message:
         _message += f"\n{text}"
@@ -164,10 +192,18 @@ def set_message(text, is_error = True):
     _message_is_error = is_error
 
 def clear_message():
+    """Clear the status message."""
     global _message
     _message = None
 
 def process_menu(menu, state = None, center = True):
+    """Process a menu list and handle its actions.
+
+    Keyword arguments:
+    menu -- a list containing menu items
+    state -- a value that will be passed to the action (default None)
+    center -- determines if the text should be centered (default True)
+    """
     global _message
     # Cache the following items, which will be stored in the given
     # menu dictionary: (a) labels with action caption, (b) width of
@@ -220,13 +256,12 @@ def process_menu(menu, state = None, center = True):
         ansiprint(label, STYLE_MENU_LABEL, center=center)
     # Print the bottom separator.
     ansiprint(menu[KEY_CACHE]["separator_bottom"], STYLE_MENU, center=center)
-
+    # Print the status message.
     if _message != None:
         style = "BGRN"
         if _message_is_error:
             style = "BRED"
         ansiprint(_message, style)
-
     # Handle user choice selection.
     ansi("RED")
     choice = input("Enter choice: " + ansicode(STYLE_TERMINATE) + ansicode("BE")).strip()
@@ -247,8 +282,14 @@ def process_menu(menu, state = None, center = True):
 
     set_message("Invalid option!")
 
-# Set the disabled state of a menu item.
 def menuitem_setdisabled(menu, index, state):
+    """Set the disabled state of a menu item.
+
+    Keyword arguments:
+    menu -- a list containing menu items
+    index -- index of the menu item in the menu list
+    state -- boolean that determines if the menu item is disabled
+    """
     if state == True:
         menu[index]["disabled"] = True
     elif state == False:
@@ -260,8 +301,8 @@ def menuitem_setdisabled(menu, index, state):
     else:
         raise ValueError("'state' argument must be boolean.")
 
-# Prompt the user to press Enter before proceeding.
 def prompt_enter():
+    """Prompt the user to press Enter before proceeding."""
     while True:
         ansi("BRED")
         for i in strings["enter_tc"]:
@@ -282,8 +323,12 @@ SECTION_END = "end"
 
 strings = None
 
-# Load and parse the strings file.
 def load_strings(force_reload = False):
+    """Load and parse the strings file.
+
+    Keyword arguments:
+    force_reload -- bypass cache and load strings from file (default False)
+    """
     global strings
     # Don't load the strings file again unless we're forcing it.
     if strings and not force_reload:

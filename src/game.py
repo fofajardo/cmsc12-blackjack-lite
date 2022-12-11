@@ -19,8 +19,9 @@ CI_SUIT = 0
 CI_TYPE = 1
 CI_VALUE = 2
 
-# Create a new card, which stores the assigned suit, type, and value.
 def new_card(suit, type_or_value):
+    """Create a new card and return a list.
+    The list stores the assigned suit, type, and value."""
     card = [""] * 3
     card[CI_SUIT] = suit               # 0: Suit
     card[CI_TYPE] = str(type_or_value) # 1: Card type (pip/ace/court)
@@ -34,8 +35,9 @@ def new_card(suit, type_or_value):
     # Return a list containing information about the card.
     return card
 
-# Generates a deck of cards, including all pips and court cards.
 def generate_deck():
+    """Return a list containing a deck of cards.
+    This includes all pips and court cards."""
     deck = []
     for suit in SUITS:
         for pip in range(1, 11):
@@ -44,8 +46,8 @@ def generate_deck():
             deck.append(new_card(suit, court))
     return deck
 
-# Retrieves the value of all the cards in a hand.
 def get_hand_total(hand):
+    """Return an integer representing the value of all the cards in a hand."""
     value = 0
     for i in hand:
         value += i[CI_VALUE]
@@ -60,8 +62,8 @@ CARD_DISPLAY = 2
 # 1 = symbols and colors
 SUIT_DISPLAY = 1
 
-# Prints all cards to console.
 def print_cards(hand, target):
+    """Prints all cards to console."""
     utils.ansiprint(f"{target} cards are:", "BE")
 
     # 0: Plain text-only cards.
@@ -118,9 +120,9 @@ def print_cards(hand, target):
             print(i)
     print()
 
-# Performs checks on whether a new deck should be generated and if
-# a blackjack is hit through an ace and 10-value card combination.
 def start_new_round(state):
+    """Performs checks on whether a new deck should be generated and if
+    a blackjack is hit through an ace and 10-value card combination."""
     if not state["new_round"]:
         return
 
@@ -160,9 +162,10 @@ def start_new_round(state):
     # next iteration unless we're in a new round again.
     state["new_round"] = False
 
-# Stand: don't draw an additional card and compare the
-# player total with the dealer total.
 def _do_stand(state):
+    """Stand: don't draw an additional card and compare the
+    player total with the dealer total."""
+    # Clear the screen.
     utils.ansi("@")
     # Print the player's and dealer's cards.
     print_cards(state["player"], "Your")
@@ -181,18 +184,19 @@ def _do_stand(state):
     utils.prompt_enter()
     state["new_round"] = True
 
-# Hit: draw a random card from the deck.
 def _do_hit(state):
+    """Hit: draw a random card from the deck."""
     card = random.choice(state["deck"])
     state["player"].append(card)
     state["deck"].remove(card)
 
-# Surrender: stop playing and settle with your current score.
 def _do_surrender(state):
+    """Surrender: stop playing and settle with your current score."""
     global is_running
     is_running = False
 
 def _do_viewscore(state):
+    """View score: view your current score."""
     utils.ansi("@")
     utils.ansiprint("<YOUR SCORE>".center(80), "BE")
     for i in utils.get_big_number(state["score"]):
@@ -200,15 +204,18 @@ def _do_viewscore(state):
     utils.prompt_enter()
 
 def _do_cheatwin(state):
+    """Cheat win: instantly gain 10 points."""
     state["score"] += POINTS_STAND
     utils.set_message(f"+{POINTS_STAND}", False)
     state["new_round"] = True
 
 def _do_cheatlose(state):
+    """Cheat lose: Instantly lose 10 points."""
     state["score"] -= POINTS_STAND
     utils.set_message(f"-{POINTS_STAND}")
     state["new_round"] = True
 
+# The available menu items.
 MENU_ITEMS = {
     "1": {
         "label": "Stand",
@@ -238,8 +245,8 @@ MENU_ITEMS = {
     }
 }
 
-# The main game function.
 def run():
+    """The main game function."""
     global is_running
     is_running = True
 
@@ -255,6 +262,7 @@ def run():
     }
 
     while is_running:
+        # Clear the screen.
         utils.ansi("@")
         # Start a new round (if applicable).
         start_new_round(state)

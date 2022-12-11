@@ -21,9 +21,10 @@ MENU_ITEMS = {
     }
 }
 
-# Start sequence: prints the intro and performs menu processing.
 def start():
+    """Prints the intro and performs menu processing."""
     while True:
+        # Clear the screen and set the color.
         utils.ansi(["@", "GRN"])
         for i in utils.strings["intro_mm"]:
             print(i.center(80))
