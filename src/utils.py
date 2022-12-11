@@ -1,78 +1,3 @@
-# ANSI escape codes.
-AEC = {
-    # Common
-    "@": "\033[H\033[2J",
-    "_": "\033[0m",
-    "$": "\033[K",
-    "UE": "\033[4m",
-    "UD": "\033[24m",
-    "BE": "\033[1m",
-    "BD": "\033[21m",
-    # Regular text
-    "BLK": "\033[0;30m",
-    "RED": "\033[0;31m",
-    "GRN": "\033[0;32m",
-    "YEL": "\033[0;33m",
-    "BLU": "\033[0;34m",
-    "MAG": "\033[0;35m",
-    "CYN": "\033[0;36m",
-    "WHT": "\033[0;37m",
-    # Regular bold text
-    "BBLK": "\033[1;30m",
-    "BRED": "\033[1;31m",
-    "BGRN": "\033[1;32m",
-    "BYEL": "\033[1;33m",
-    "BBLU": "\033[1;34m",
-    "BMAG": "\033[1;35m",
-    "BCYN": "\033[1;36m",
-    "BWHT": "\033[1;37m",
-    # Regular underline text
-    "UBLK": "\033[4;30m",
-    "URED": "\033[4;31m",
-    "UGRN": "\033[4;32m",
-    "UYEL": "\033[4;33m",
-    "UBLU": "\033[4;34m",
-    "UMAG": "\033[4;35m",
-    "UCYN": "\033[4;36m",
-    "UWHT": "\033[4;37m",
-    # Regular background
-    "BLKB": "\033[40m",
-    "REDB": "\033[41m",
-    "GRNB": "\033[42m",
-    "YELB": "\033[43m",
-    "BLUB": "\033[44m",
-    "MAGB": "\033[45m",
-    "CYNB": "\033[46m",
-    "WHTB": "\033[47m",
-    # High intensity background
-    "BLKHB": "\033[0;100m",
-    "REDHB": "\033[0;101m",
-    "GRNHB": "\033[0;102m",
-    "YELHB": "\033[0;103m",
-    "BLUHB": "\033[0;104m",
-    "MAGHB": "\033[0;105m",
-    "CYNHB": "\033[0;106m",
-    "WHTHB": "\033[0;107m",
-    # High intensity text
-    "HBLK": "\033[0;90m",
-    "HRED": "\033[0;91m",
-    "HGRN": "\033[0;92m",
-    "HYEL": "\033[0;93m",
-    "HBLU": "\033[0;94m",
-    "HMAG": "\033[0;95m",
-    "HCYN": "\033[0;96m",
-    "HWHT": "\033[0;97m",
-    # Bold high intensity text
-    "BHBLK": "\033[1;90m",
-    "BHRED": "\033[1;91m",
-    "BHGRN": "\033[1;92m",
-    "BHYEL": "\033[1;93m",
-    "BHBLU": "\033[1;94m",
-    "BHMAG": "\033[1;95m",
-    "BHCYN": "\033[1;96m",
-    "BHWHT": "\033[1;97m"
-}
-
 # Flip this to true to disable all ANSI escape codes.
 # Useful in terminals that don't support it, such as Windows'
 # default command prompt.
@@ -91,9 +16,9 @@ def ansi(keys):
         return
     if isinstance(keys, list):
         for i in keys:
-            print(AEC[i], end="")
+            print(strings["aec"][i], end="")
     else:
-        print(AEC[keys], end="")
+        print(strings["aec"][keys], end="")
 
 def ansicode(keys):
     """Return a string with the ANSI escape code given a key list."""
@@ -103,10 +28,10 @@ def ansicode(keys):
     if isinstance(keys, list):
         code = ""
         for i in keys:
-            code += AEC[i]
+            code += strings["aec"][i]
         return code
     else:
-        return AEC[keys]
+        return strings["aec"][keys]
 
 def ansiprint(text, start_keys=None, end_keys=STYLE_TERMINATE, center=False):
     """Print text that is affixed with an ANSI escape code.
