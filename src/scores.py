@@ -3,8 +3,8 @@ import os
 
 FILENAME_SCORES = "scores.txt"
 
-def _sortByScore(value):
-    """Internal function to sort the scores by value."""
+def _sort_by_score(value):
+    """Return second item in the list as an integer (used for sorting)."""
     return int(value[1])
 
 scores = None
@@ -50,7 +50,7 @@ def get():
     # Otherwise, sort the loaded score list. It is possible that it is
     # unsorted and we would not want to display that to the player.
     else:
-        scores.sort(key=_sortByScore, reverse=True)
+        scores.sort(key=_sort_by_score, reverse=True)
     return scores
 
 def save():
