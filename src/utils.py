@@ -283,6 +283,9 @@ def load_strings(force_reload = False):
                 separator_index = line.index("=")
                 key = line[0:separator_index]
                 value = line[separator_index + 1:len(line)]
+                # Remove extra backslash character from ANSI escape code.
+                if "\\033" in value:
+                    value = value.replace("\\033", "\033")
                 strings[section_name][key] = value
         else:
             # Set section name and type based on the header
