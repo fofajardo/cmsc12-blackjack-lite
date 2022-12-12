@@ -129,7 +129,6 @@ def process_menu(menu, state = None, center = True):
     state -- a value that will be passed to the action (default None)
     center -- determines if the text should be centered (default True)
     """
-    global _MESSAGE
     # Cache the following items, which will be stored in the given
     # menu dictionary: (a) labels with action caption, (b) width of
     # the longest label, and (c) menu separator.
