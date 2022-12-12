@@ -1,5 +1,5 @@
-import utils
 import os
+import utils
 
 FILENAME_SCORES = "scores.txt"
 
