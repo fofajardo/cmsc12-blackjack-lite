@@ -182,7 +182,7 @@ def process_menu(menu, state = None, center = True):
     # Print the bottom separator.
     ansiprint(menu[KEY_CACHE]["separator_bottom"], STYLE_MENU, center=center)
     # Print the status message.
-    if _MESSAGE != None:
+    if _MESSAGE is not None:
         style = "BGRN"
         if _MESSAGE_IS_ERROR:
             style = "BRED"
@@ -199,7 +199,7 @@ def process_menu(menu, state = None, center = True):
         # Ignore actions for disabled menu items.
         if not "disabled" in menuitem:
             clear_message()
-            if state != None:
+            if state is not None:
                 menuitem["action"](state)
             else:
                 menuitem["action"]()
@@ -215,9 +215,9 @@ def menuitem_setdisabled(menu, index, state):
     index -- index of the menu item in the menu list
     state -- boolean that determines if the menu item is disabled
     """
-    if state == True:
+    if state is True:
         menu[index]["disabled"] = True
-    elif state == False:
+    elif state is False:
         # This menu item is not disabled. Ignore.
         if not "disabled" in menu[index]:
             return
