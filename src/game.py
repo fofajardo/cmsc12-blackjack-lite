@@ -132,31 +132,27 @@ def start_new_round(state):
         state["deck"] = generate_deck()
 
     # Reset player hand and draw two additional cards.
-    state["player"].clear()
-    card_ace = None
-    card_ten = None
+    users = ["player", "dealer"]
 
-    for i in range(2):
-        card = random.choice(state["deck"])
-        state["player"].append(card)
-        state["deck"].remove(card)
-        # Check if our first two cards match a combination for
-        # hitting a blackjack early.
-        if card[CI_TYPE] == CARD_ACE:
-            card_ace = card
-        if card[CI_VALUE] == 10:
-            card_ten = card
+    for user in users:
+        state[user].clear()
+        card_ace = None
+        card_ten = None
 
-    # Set the ace card's value to 11 if we've matched the combination.
-    if card_ace and card_ten:
-        card_ace[CI_VALUE] = 11
+        for i in range(2):
+            card = random.choice(state["deck"])
+            state[user].append(card)
+            state["deck"].remove(card)
+            # Check if our first two cards match a combination for
+            # hitting a blackjack early.
+            if card[CI_TYPE] == CARD_ACE:
+                card_ace = card
+            if card[CI_VALUE] == 10:
+                card_ten = card
 
-    # Reset dealer hand and draw two additional cards.
-    state["dealer"].clear()
-    for i in range(2):
-        card = random.choice(state["deck"])
-        state["dealer"].append(card)
-        state["deck"].remove(card)
+        # Set the ace card's value to 11 if we've matched the combination.
+        if card_ace and card_ten:
+            card_ace[CI_VALUE] = 11
 
     # We're done and prevent these checks from occurring in the
     # next iteration unless we're in a new round again.
