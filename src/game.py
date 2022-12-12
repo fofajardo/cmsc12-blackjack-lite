@@ -166,17 +166,21 @@ def _do_stand(state):
     # Print the player's and dealer's cards.
     print_cards(state["player"], "Your")
     print_cards(state["dealer"], "Dealer's")
+    # Handle situations where player and dealer's total are the same.
+    if state["player_total"] == state["dealer_total"]:
+        print("It's a tie. Nobody gets any points.".center(80))
     # Determine whether the player should win or lose points.
-    result = ""
-    style = "BGRN"
-    if state["player_total"] > state["dealer_total"]:
-        result = "win"
-        state["score"] += POINTS_STAND
     else:
-        result = "lose"
-        state["score"] -= POINTS_STAND
-        style = "BRED"
-    utils.ansiprint(f"You {result} {POINTS_STAND} points!".center(80), style)
+        result = ""
+        style = "BGRN"
+        if state["player_total"] > state["dealer_total"]:
+            result = "win"
+            state["score"] += POINTS_STAND
+        else:
+            result = "lose"
+            state["score"] -= POINTS_STAND
+            style = "BRED"
+        utils.ansiprint(f"You {result} {POINTS_STAND} points!".center(80), style)
     utils.prompt_enter()
     state["new_round"] = True
 
