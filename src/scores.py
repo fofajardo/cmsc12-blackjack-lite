@@ -7,7 +7,7 @@ def _sort_by_score(value):
     """Return second item in the list as an integer (used for sorting)."""
     return int(value[1])
 
-scores = None
+SCORES = None
 
 def get_default():
     """Retrieve the default set of high scores and return a list."""
@@ -18,12 +18,12 @@ def get_default():
 
 def get():
     """Retrieve high scores from file and return a list."""
-    global scores
+    global SCORES
     # Don't read the scores file again if we have loaded it already.
-    if scores:
-        return scores
+    if SCORES:
+        return SCORES
     # Initialize scores to an empty list.
-    scores = []
+    SCORES = []
     # Read the scores file if it exists.
     exists = os.path.exists(FILENAME_SCORES)
     if exists:
@@ -38,53 +38,53 @@ def get():
                 if len(entry) != 2 or not entry[1].isdigit():
                     # Remove any previously added entries. We don't
                     # need those anymore.
-                    scores.clear()
+                    SCORES.clear()
                     break
-                scores.append(entry)
+                SCORES.append(entry)
         file_scores.close()
     # If the scores list is still empty at this point...
-    if len(scores) == 0:
+    if len(SCORES) == 0:
         # This is already generated in descending order, so there's
         # no need to sort it. Just get the default list.
-        scores = get_default()
+        SCORES = get_default()
     # Otherwise, sort the loaded score list. It is possible that it is
     # unsorted and we would not want to display that to the player.
     else:
-        scores.sort(key=_sort_by_score, reverse=True)
-    return scores
+        SCORES.sort(key=_sort_by_score, reverse=True)
+    return SCORES
 
 def save():
     """Save high scores to file."""
     file_scores = open(FILENAME_SCORES, "w", encoding="utf-8")
-    for i in scores:
+    for i in SCORES:
         # Delimit score entries with a comma.
         file_scores.write(",".join(i) + "\n")
     file_scores.close()
 
 def reset():
     """Reset all high scores and save to file."""
-    global scores
-    scores = get_default()
+    global SCORES
+    SCORES = get_default()
     save()
 
 def add(entry):
     """Add a new entry to the high scores list."""
-    global scores
+    global SCORES
     score_player = int(entry[1])
     insertion_index = 0
-    for i in range(len(scores)):
-        score_current = int(scores[i][1])
+    for i in range(len(SCORES)):
+        score_current = int(SCORES[i][1])
         if score_player > score_current:
             insertion_index = i
             break
-    scores.insert(insertion_index, entry)
-    scores.pop()
+    SCORES.insert(insertion_index, entry)
+    SCORES.pop()
     save()
 
 def _do_return(state = None):
     """Return: exits the current scene."""
-    global is_running
-    is_running = False
+    global IS_RUNNING
+    IS_RUNNING = False
 
 def _do_add(state):
     """Add: prompts the user to enter their name and save their score."""
@@ -134,18 +134,18 @@ MENU_ITEMS_VIEW = {
     }
 }
 
-is_running = True
+IS_RUNNING = True
 
 def run_view():
     """Run the view all high scores scene."""
-    global is_running
-    is_running = True
+    global IS_RUNNING
+    IS_RUNNING = True
 
-    while is_running:
+    while IS_RUNNING:
         # Clear the screen and set the color.
         utils.ansi(["@", "_", "GRN"])
         # Print the intro high scores text.
-        for i in utils.strings["intro_hs"]:
+        for i in utils.STRINGS["intro_hs"]:
             print(i.center(80))
         utils.ansi("_")
         # Get the high scores list.
@@ -189,15 +189,15 @@ def run_view():
 
 def run_save(state):
     """Run the save player's high score scene."""
-    global is_running
-    is_running = True
+    global IS_RUNNING
+    IS_RUNNING = True
 
     score = state["score"]
 
-    while is_running:
+    while IS_RUNNING:
         # Clear the screen and set the color.
         utils.ansi(["@", "GRN"])
-        for i in utils.strings["game_over"]:
+        for i in utils.STRINGS["game_over"]:
             print(i.center(80))
         utils.ansi(utils.STYLE_TERMINATE)
         # Print game over header if necessary.
@@ -217,6 +217,6 @@ def run_save(state):
         is_score_low = (score < score_min)
         utils.menuitem_setdisabled(MENU_ITEMS_ADD, "1", is_score_low)
         if is_score_low:
-            for i in utils.strings["score_low"]:
+            for i in utils.STRINGS["score_low"]:
                 print(i.center(80))
         utils.process_menu(MENU_ITEMS_ADD, score)

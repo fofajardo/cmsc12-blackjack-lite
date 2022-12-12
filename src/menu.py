@@ -26,7 +26,7 @@ def start():
     while True:
         # Clear the screen and set the color.
         utils.ansi(["@", "GRN"])
-        for i in utils.strings["intro_mm"]:
+        for i in utils.STRINGS["intro_mm"]:
             print(i.center(80))
         utils.ansi(utils.STYLE_TERMINATE)
 

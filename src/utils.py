@@ -16,9 +16,9 @@ def ansi(keys):
         return
     if isinstance(keys, list):
         for i in keys:
-            print(strings["aec"][i], end="")
+            print(STRINGS["aec"][i], end="")
     else:
-        print(strings["aec"][keys], end="")
+        print(STRINGS["aec"][keys], end="")
 
 def ansicode(keys):
     """Return a string with the ANSI escape code given a key list."""
@@ -28,10 +28,10 @@ def ansicode(keys):
     if isinstance(keys, list):
         code = ""
         for i in keys:
-            code += strings["aec"][i]
+            code += STRINGS["aec"][i]
         return code
     else:
-        return strings["aec"][keys]
+        return STRINGS["aec"][keys]
 
 def ansiprint(text, start_keys=None, end_keys=STYLE_TERMINATE, center=False):
     """Print text that is affixed with an ANSI escape code.
@@ -87,10 +87,10 @@ def get_big_number(number):
            i == "7" or \
            i == "8" or \
            i == "9":
-            lines = strings["num" + i]
+            lines = STRINGS["num" + i]
         # Handle negative or minus sign.
         elif i == "-":
-            lines = strings["num_neg"]
+            lines = STRINGS["num_neg"]
         for i in range(HEIGHT_BIG_NUM):
             lines_merged[i] += lines[i]
     return lines_merged
@@ -99,8 +99,8 @@ def get_big_number(number):
 # on user input, and provides a prompt.
 KEY_CACHE = "_cache"
 
-_message = None
-_message_is_error = True
+_MESSAGE = None
+_MESSAGE_IS_ERROR = True
 
 def set_message(text, is_error = True):
     """Set the status message.
@@ -109,17 +109,17 @@ def set_message(text, is_error = True):
     text -- the text to be displayed
     is_error -- determines if the text should be colored as an error
     """
-    global _message, _message_is_error
-    if _message:
-        _message += f"\n{text}"
+    global _MESSAGE, _MESSAGE_IS_ERROR
+    if _MESSAGE:
+        _MESSAGE += f"\n{text}"
     else:
-        _message = text
-    _message_is_error = is_error
+        _MESSAGE = text
+    _MESSAGE_IS_ERROR = is_error
 
 def clear_message():
     """Clear the status message."""
-    global _message
-    _message = None
+    global _MESSAGE
+    _MESSAGE = None
 
 def process_menu(menu, state = None, center = True):
     """Process a menu list and handle its actions.
@@ -129,7 +129,7 @@ def process_menu(menu, state = None, center = True):
     state -- a value that will be passed to the action (default None)
     center -- determines if the text should be centered (default True)
     """
-    global _message
+    global _MESSAGE
     # Cache the following items, which will be stored in the given
     # menu dictionary: (a) labels with action caption, (b) width of
     # the longest label, and (c) menu separator.
@@ -182,11 +182,11 @@ def process_menu(menu, state = None, center = True):
     # Print the bottom separator.
     ansiprint(menu[KEY_CACHE]["separator_bottom"], STYLE_MENU, center=center)
     # Print the status message.
-    if _message != None:
+    if _MESSAGE != None:
         style = "BGRN"
-        if _message_is_error:
+        if _MESSAGE_IS_ERROR:
             style = "BRED"
-        ansiprint(_message, style)
+        ansiprint(_MESSAGE, style)
     # Handle user choice selection.
     ansi("RED")
     choice = input("Enter choice: " + ansicode(STYLE_TERMINATE) + ansicode("BE")).strip()
@@ -230,7 +230,7 @@ def prompt_enter():
     """Prompt the user to press Enter before proceeding."""
     while True:
         ansi("BRED")
-        for i in strings["enter_tc"]:
+        for i in STRINGS["enter_tc"]:
             print(i.center(80))
         ansi(STYLE_TERMINATE)
 
@@ -246,7 +246,7 @@ SECTION_STRING_MULTILINE = "string_ml"
 SECTION_STRING_GROUP = "string"
 SECTION_END = "end"
 
-strings = None
+STRINGS = None
 
 def load_strings(force_reload = False):
     """Load and parse the strings file.
@@ -254,12 +254,12 @@ def load_strings(force_reload = False):
     Keyword arguments:
     force_reload -- bypass cache and load strings from file (default False)
     """
-    global strings
+    global STRINGS
     # Don't load the strings file again unless we're forcing it.
-    if strings and not force_reload:
+    if STRINGS and not force_reload:
         return
     # Initialize strings dictionary.
-    strings = {}
+    STRINGS = {}
     # Keep track of current section details.
     section_type = None
     section_name = None
@@ -277,7 +277,7 @@ def load_strings(force_reload = False):
                 continue
             # Section: string (multi-line)
             elif section_type == SECTION_STRING_MULTILINE:
-                strings[section_name].append(i)
+                STRINGS[section_name].append(i)
             # Section: string group
             elif section_type == SECTION_STRING_GROUP:
                 separator_index = line.index("=")
@@ -286,7 +286,7 @@ def load_strings(force_reload = False):
                 # Remove extra backslash character from ANSI escape code.
                 if "\\033" in value:
                     value = value.replace("\\033", "\033")
-                strings[section_name][key] = value
+                STRINGS[section_name][key] = value
         else:
             # Set section name and type based on the header
             header = line.split(" ")
@@ -305,11 +305,11 @@ def load_strings(force_reload = False):
 
             # Create a new list or dictionary if the section name does
             # not yet exist. Otherwise, merge their contents.
-            if not section_name in strings:
+            if not section_name in STRINGS:
                 if header[0] == SECTION_STRING_MULTILINE:
-                    strings[section_name] = []
+                    STRINGS[section_name] = []
                 elif header[0] == SECTION_STRING_GROUP:
-                    strings[section_name] = {}
+                    STRINGS[section_name] = {}
     # Close the strings file for good measure.
     strings_file.close()
 

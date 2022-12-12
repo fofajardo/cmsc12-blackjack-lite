@@ -12,7 +12,7 @@ SUITS = ["c", "d", "h", "s"]
 CARDS_COURT = ["J", "Q", "K"]
 CARD_ACE = "A"
 
-is_running = True
+IS_RUNNING = True
 
 # Card index constants.
 CI_SUIT = 0
@@ -76,9 +76,9 @@ def print_cards(hand, target):
         lines = []
         # Large vs. small card display.
         if CARD_DISPLAY == 2:
-            lines = utils.strings["card"]
+            lines = utils.STRINGS["card"]
         else:
-            lines = utils.strings["card_sm"]
+            lines = utils.STRINGS["card_sm"]
         lines_count = len(lines)
         # Initialize the list which will hold the merged cards.
         lines_merged = [""] * lines_count
@@ -188,8 +188,8 @@ def _do_hit(state):
 
 def _do_surrender(state):
     """Surrender: stop playing and settle with your current score."""
-    global is_running
-    is_running = False
+    global IS_RUNNING
+    IS_RUNNING = False
 
 def _do_viewscore(state):
     """View score: view your current score."""
@@ -243,8 +243,8 @@ MENU_ITEMS = {
 
 def run():
     """The main game function."""
-    global is_running
-    is_running = True
+    global IS_RUNNING
+    IS_RUNNING = True
 
     state = {
         "deck": [],
@@ -257,7 +257,7 @@ def run():
         "new_round": True,
     }
 
-    while is_running:
+    while IS_RUNNING:
         # Clear the screen.
         utils.ansi("@")
         # Start a new round (if applicable).
